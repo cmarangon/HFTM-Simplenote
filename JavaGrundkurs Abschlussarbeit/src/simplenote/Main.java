@@ -1,5 +1,7 @@
 package simplenote;
 	
+import java.io.IOException;
+
 import simplenote.control.RootController;
 import simplenote.interfaces.InitCompletionHandler;
 import simplenote.model.Note;
@@ -15,18 +17,27 @@ import javafx.stage.StageStyle;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 
 
 public class Main extends Application {
+    
+    private Stage mainStage;
+    
+    // Loadingscreen elements
     private Pane splashLayout;
     private ProgressBar loadProgress;
     private Label progressText;
-    private Stage mainStage;
     
     
     /**
@@ -44,6 +55,25 @@ public class Main extends Application {
         
         new Thread(loadNotesTask).start();
     }
+    
+    @Override
+    public void init() {
+        ImageView splash = new ImageView(new Image(
+                getClass().getResourceAsStream("src/img/small_armadillo.png")
+        ));
+        loadProgress = new ProgressBar();
+        loadProgress.setPrefWidth(300);
+        progressText = new Label("Lade Notizen");
+        VBox vbox = new VBox();
+        splashLayout = vbox;
+        splashLayout.getChildren().addAll(splash, loadProgress, progressText);
+        progressText.setAlignment(Pos.CENTER);
+        splashLayout.setStyle(
+                "-fx-padding: 20; " +
+                "-fx-background-color: #fff; "
+        );
+        splashLayout.setEffect(new DropShadow());
+    }
 
 	/**
 	 * Seperate task to load all notes 
@@ -56,7 +86,7 @@ public class Main extends Application {
                     FXCollections.<Note>observableArrayList();
             
             // load notes here
-            //Thread.sleep(2000);
+            Thread.sleep(2000);
             return foundNotes;
         }
     };
@@ -73,13 +103,15 @@ public class Main extends Application {
             Task<?> task,
             InitCompletionHandler initCompletionHandler
     ) {
-        progressText.textProperty().bind(task.messageProperty());
+        //progressText.textProperty().bind(task.messageProperty());
         loadProgress.progressProperty().bind(task.progressProperty());
         task.stateProperty().addListener((observableValue, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
                 loadProgress.progressProperty().unbind();
                 loadProgress.setProgress(1);
                 initStage.toFront();
+                
+                // Fade out transition
                 FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.2), splashLayout);
                 fadeSplash.setFromValue(1.0);
                 fadeSplash.setToValue(0.0);
@@ -87,7 +119,8 @@ public class Main extends Application {
                 fadeSplash.play();
 
                 initCompletionHandler.complete();
-            } // todo add code to gracefully handle other task states.
+            }
+            // todo add code to gracefully handle other task states.
         });
 
         Scene splashScene = new Scene(splashLayout);

@@ -5,6 +5,7 @@ package simplenote.model;
 
 import java.util.Date;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -17,8 +18,8 @@ public class Note {
     private Date creation_date;
     private StringProperty title;
     private StringProperty text;
-    
-    
+    private IntegerProperty owner_id;
+    private Integer[] shared_ids;
     
     public Note(String title, String text) {
         this.creation_date = new Date();
