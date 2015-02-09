@@ -1,19 +1,14 @@
 package simplenote;
-	
+
 import java.io.IOException;
 
-import simplenote.control.RootController;
-import simplenote.interfaces.InitCompletionHandler;
-import simplenote.model.Note;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -23,19 +18,22 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
+import simplenote.control.RootController;
+import simplenote.interfaces.InitCompletionHandler;
+import simplenote.model.Vault;
 
 
 public class Main extends Application {
     
     private Stage mainStage;
     
-    // Loadingscreen elements
-    private Pane splashLayout;
+    private Vault vault;
+    
+    // LoadingScreen elements
+    private VBox loadingPane;
     private ProgressBar loadProgress;
     private Label progressText;
     
@@ -56,6 +54,10 @@ public class Main extends Application {
         new Thread(loadNotesTask).start();
     }
     
+    
+    /**
+     * Generate LoadingScreen
+     */
     @Override
     public void init() {
         ImageView splash = new ImageView(new Image(
@@ -64,58 +66,61 @@ public class Main extends Application {
         loadProgress = new ProgressBar();
         loadProgress.setPrefWidth(300);
         progressText = new Label("Lade Notizen");
-        VBox vbox = new VBox();
-        splashLayout = vbox;
-        splashLayout.getChildren().addAll(splash, loadProgress, progressText);
+        loadingPane = new VBox();
+        loadingPane.getChildren().addAll(splash, loadProgress, progressText);
         progressText.setAlignment(Pos.CENTER);
-        splashLayout.setStyle(
+        loadingPane.setStyle(
                 "-fx-padding: 20; " +
                 "-fx-background-color: #fff; "
         );
-        splashLayout.setEffect(new DropShadow());
+        loadingPane.setEffect(new DropShadow());
     }
 
 	/**
 	 * Seperate task to load all notes 
 	 */
-    final Task<ObservableList<Note>> loadNotesTask = new Task<ObservableList<Note>>() {
+    final Task<Integer> loadNotesTask = new Task<Integer>() {
         @Override
-        protected ObservableList<Note> call() throws InterruptedException {
+        protected Integer call() throws InterruptedException {
             
-            ObservableList<Note> foundNotes =
-                    FXCollections.<Note>observableArrayList();
+            updateMessage("Lade Notizen...");
+            vault = new Vault();
             
-            // load notes here
-            Thread.sleep(2000);
-            return foundNotes;
+            updateMessage(String.valueOf(vault.getNotes().size()) + " Notizen geladen");
+            Thread.sleep(1500);
+            
+            return vault.getNotes().size();
         }
     };
     
     /**
      * Show loading screen
      * 
-     * @param initStage
+     * @param primaryStage
      * @param task
      * @param initCompletionHandler
      */
     private void showLoadingScreen(
-            final Stage initStage,
+            final Stage primaryStage,
             Task<?> task,
             InitCompletionHandler initCompletionHandler
     ) {
-        //progressText.textProperty().bind(task.messageProperty());
+        progressText.textProperty().bind(task.messageProperty());
         loadProgress.progressProperty().bind(task.progressProperty());
         task.stateProperty().addListener((observableValue, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
+                
                 loadProgress.progressProperty().unbind();
                 loadProgress.setProgress(1);
-                initStage.toFront();
                 
-                // Fade out transition
-                FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.2), splashLayout);
+                // Bring initStage to front
+                primaryStage.toFront();
+                
+                // Add Fade out transition to loadingScreen
+                FadeTransition fadeSplash = new FadeTransition(Duration.seconds(1.2), loadingPane);
                 fadeSplash.setFromValue(1.0);
                 fadeSplash.setToValue(0.0);
-                fadeSplash.setOnFinished(actionEvent -> initStage.hide());
+                fadeSplash.setOnFinished(actionEvent -> primaryStage.hide());
                 fadeSplash.play();
 
                 initCompletionHandler.complete();
@@ -123,33 +128,45 @@ public class Main extends Application {
             // todo add code to gracefully handle other task states.
         });
 
-        Scene splashScene = new Scene(splashLayout);
-        initStage.initStyle(StageStyle.UNDECORATED);
+        
+        Scene loadingScene = new Scene(loadingPane);
+        primaryStage.setScene(loadingScene);
+        
+        // place stage at center of primary screen
         final Rectangle2D bounds = Screen.getPrimary().getBounds();
-        initStage.setScene(splashScene);
-        initStage.setX(bounds.getMinX() + bounds.getWidth() / 2 - 400 / 2);
-        initStage.setY(bounds.getMinY() + bounds.getHeight() / 2 - 200 / 2);
-        initStage.show();
+        primaryStage.setX(bounds.getMinX() + bounds.getWidth() / 2 - 400 / 2);
+        primaryStage.setY(bounds.getMinY() + bounds.getHeight() / 2 - 200 / 2);
+        
+        primaryStage.show();
     }
 	
     /**
      * Show main stage
      */
     private void showMainStage() {
-        mainStage = new Stage(StageStyle.DECORATED);
-        mainStage.setTitle("simpleNote");
-        /*
-        final ListView<String> peopleView = new ListView<>();
-        peopleView.itemsProperty().bind(friends);
+        try {
+            mainStage = new Stage();
+            mainStage.setTitle("simpleNote");
+            
+            // Load root layout from fxml file.
+            RootController rc = RootController.getInstance();
+            rc.setVault(this.vault);
 
-        mainStage.setScene(new Scene(peopleView));
-        mainStage.show();
-        */
-        RootController rc = RootController.getInstance();
-        rc.setMainApp(this);
-        rc.setPrimaryStage(mainStage);
-        rc.initRootLayout();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setController(rc);
+            loader.setLocation(getClass().getResource("view/RootLayout.fxml"));
+            BorderPane rootLayout = (BorderPane) loader.load();
+            rc.setRootLayout(rootLayout);
+            rc.showOverview();
+
+            mainStage.setTitle("simpleNote");
+            mainStage.setScene(new Scene(rootLayout));
+            mainStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
     
 	public static void main(String[] args) {
 		launch(args);

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplenote.control.AddNoteController">
+   <children>
+      <HTMLEditor fx:id="noteText" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="10.0" layoutY="50.0" prefHeight="400.0" prefWidth="980.0" />
+      <TextField fx:id="noteTitle" layoutX="10.0" layoutY="15.0" promptText="Titel" />
+      <ToggleButton fx:id="noteShare" layoutX="937.0" layoutY="15.0" mnemonicParsing="false" text="Teilen" />
+      <Button layoutX="912.0" layoutY="460.0" mnemonicParsing="false" onAction="#saveNote" text="Speichern" />
+      <Button layoutX="10.0" layoutY="460.0" mnemonicParsing="false" onAction="#addFile" text="Datei hinzufügen" />
+      <Button layoutX="135.0" layoutY="460.0" mnemonicParsing="false" onAction="#addLink" text="Link hinzufügen" />
+   </children>
+</AnchorPane>

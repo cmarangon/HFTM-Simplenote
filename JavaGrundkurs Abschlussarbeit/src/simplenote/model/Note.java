@@ -3,6 +3,7 @@
  */
 package simplenote.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javafx.beans.property.IntegerProperty;
@@ -13,56 +14,75 @@ import javafx.beans.property.SimpleStringProperty;
  * @author Claudio Marangon
  *
  */
-public class Note {
+public class Note implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4680988752581353062L;
     private Date creation_date;
-    private StringProperty title;
-    private StringProperty text;
-    private IntegerProperty owner_id;
+    private String title;
+    private String text;
+    private Integer owner_id;
     private Integer[] shared_ids;
+    
+    public Note(String title) {
+        this(title, "");
+    }
     
     public Note(String title, String text) {
         this.creation_date = new Date();
-        this.title = new SimpleStringProperty(title);
-        this.text = new SimpleStringProperty(text);
+        this.title = title;
+        this.text = text;
     }
     
+    
+    @Override
+    public String toString() {
+        return this.title;
+    }
+    
+    /** GETTERS AND SETTERS **/
     
     /**
      * @return the creation_date
      */
-    public Date getCreation_date() {
-        return creation_date;
+    public Date getCreationDate() {
+        return this.creation_date;
     }
+    
     /**
      * @param creation_date the creation_date to set
      */
-    public void setCreation_date(Date creation_date) {
+    public void setCreationDate(Date creation_date) {
         this.creation_date = creation_date;
     }
+    
     /**
      * @return the title
      */
-    public StringProperty getTitle() {
-        return title;
+    public String getTitle() {
+        return this.title;
     }
+    
     /**
      * @param title the title to set
      */
-    public void setTitle(StringProperty title) {
+    public void setTitle(String title) {
         this.title = title;
     }
+    
     /**
      * @return the text
      */
-    public StringProperty getText() {
-        return text;
+    public String getText() {
+        return this.text;
     }
+    
     /**
      * @param text the text to set
      */
-    public void setText(StringProperty text) {
+    public void setText(String text) {
         this.text = text;
     }
-    
 }

@@ -6,8 +6,11 @@ package simplenote.control;
 import java.io.IOException;
 
 import simplenote.Main;
+import simplenote.model.Vault;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -18,26 +21,33 @@ import javafx.stage.Stage;
 public class RootController {
     private static RootController instance = null;
     
+    private Vault vault;
+    
     private Stage primaryStage;
     protected Main mainApp;
     private BorderPane rootLayout;
     
-    /*
-    public CourseOverviewController coc;
-    public AddCourseController acc;
-    public TrainingController tc;
-    */
+    public AddNoteController anc;
+    public NoteOverviewController noc;
     
     public RootController() {
+        //System.out.println("RC");
     }
     
     public static RootController getInstance() {
         if (null == instance) {
+            System.out.println("new");
             instance = new RootController();
         }
+        System.out.println("return RC");
         return instance;
     }
 
+    @FXML
+    public void initialize() {
+        
+        System.out.println("init");
+    }
     
     /*
     public RootController(MainApp mApp, Stage pStage) {
@@ -52,36 +62,66 @@ public class RootController {
     }
     */
     
-
-    /**
-     * Initializes the root layout.
-     */
-    public void initRootLayout() {
+    
+    /* FXML Actions */
+    
+    @FXML
+    public void showOverview() {
+        System.out.println("show overview");
+        this.loadNoteOverviewLayout();
+    }
+    
+    @FXML
+    public void showAddNote() {
+        System.out.println("show add note");
+        this.loadAddNoteLayout();
+    }
+    
+    @FXML
+    public void showEditNote() {
+        System.out.println("show edit note");
+    }
+    
+    @FXML
+    public void closeApplication() {
+        System.out.println("close app");
+        System.exit(0);
+    }
+    
+    
+    /* Layouts & Controllers */
+    
+    public void loadNoteOverviewLayout() {
         try {
-            // Load root layout from fxml file.
+            // Load person overview.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("../view/RootLayout.fxml"));
-            this.rootLayout = (BorderPane) loader.load();
+            loader.setLocation(getClass().getResource("../view/NoteOverviewLayout.fxml"));
 
-            // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
-            this.primaryStage.setTitle("simpleNote");
-            this.primaryStage.setScene(scene);
-            this.primaryStage.show();
-            
-            // init Overview
-            /*
-            coc = new CourseOverviewController();
-            coc.initCourseOverviewLayout();
-            */
+            // Set person overview into the center of root layout.
+            this.getRootLayout().setCenter((AnchorPane) loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
+    public void loadAddNoteLayout() {
+        try {
+            // Load person overview.
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("../view/AddNoteLayout.fxml"));
+
+            // Set person overview into the center of root layout.
+            this.getRootLayout().setCenter((AnchorPane) loader.load());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     
+    /** GETTERS AND SETTERS **/
     
-    /* Getters & Setters */
+    public void setRootLayout(BorderPane rootLayout) {
+        this.rootLayout = rootLayout;
+    }
     
     public BorderPane getRootLayout() {
         return this.rootLayout;
@@ -103,4 +143,11 @@ public class RootController {
         return this.primaryStage;
     }
     
+    public void setVault(Vault v) {
+        this.vault = v;
+    }
+    
+    public Vault getVault() {
+        return this.vault;
+    }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="500.0" prefWidth="1000.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplenote.control.NoteOverviewController">
+   <children>
+      <ListView fx:id="noteList" prefHeight="500.0" prefWidth="200.0" />
+      <WebView fx:id="noteText" layoutX="200.0" layoutY="60.0" prefHeight="440.0" />
+      <Label fx:id="noteTitle" layoutX="210.0" layoutY="10.0">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label fx:id="noteDate" layoutX="210.0" layoutY="40.0" textFill="#a8a8a8" />
+      <Button fx:id="deleteBtn" layoutX="921.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteNote" opacity="0.2" text="Löschen" />
+      <Button fx:id="editBtn" layoutX="828.0" layoutY="10.0" mnemonicParsing="false" onAction="#editNote" opacity="0.2" text="Bearbeiten" />
+   </children>
+</AnchorPane>
