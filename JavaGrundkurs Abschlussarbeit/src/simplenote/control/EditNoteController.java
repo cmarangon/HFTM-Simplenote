@@ -39,7 +39,9 @@ public class EditNoteController {
     
     @FXML
     public void initialize() {
-        //this.note = this.rc.getSelectedNote();
+        this.note = this.rc.getSelectedNote();
+        noteTitle.setText(this.note.getTitle());
+        noteText.setHtmlText(this.note.getText());
     }
     
     /* FXML Actions */
@@ -52,7 +54,7 @@ public class EditNoteController {
         this.note.setTitle(nTitle);
         this.note.setText(nText);
         
-        this.rc.getVault().add(note);
+        //this.rc.getVault().add(note);
         if(this.rc.getVault().save()){
             this.rc.showOverview();
         } else {

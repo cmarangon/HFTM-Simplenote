@@ -80,7 +80,8 @@ public class NoteOverviewController {
     
     @FXML
     public void editNote() {
-        // show edit layout for this note
+        this.rc.setSelectedNote(this.noteList.getSelectionModel().getSelectedItem());
+        this.rc.showEditNote();
     }
     
     @FXML

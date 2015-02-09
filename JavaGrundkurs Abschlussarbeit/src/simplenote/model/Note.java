@@ -6,10 +6,6 @@ package simplenote.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.property.SimpleStringProperty;
-
 /**
  * @author Claudio Marangon
  *

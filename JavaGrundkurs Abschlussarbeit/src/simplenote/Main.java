@@ -16,7 +16,6 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -87,7 +86,7 @@ public class Main extends Application {
             vault = new Vault();
             
             updateMessage(String.valueOf(vault.getNotes().size()) + " Notizen geladen");
-            Thread.sleep(1500);
+            //Thread.sleep(1500);
             
             return vault.getNotes().size();
         }

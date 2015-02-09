@@ -1,4 +1,9 @@
+/* LABELS */
+.discreet {
+    -fx-text-fill:#a8a8a8;
+}
 
+/* BUTTONS */
 .button {
     -fx-opacity:0.5;
 }

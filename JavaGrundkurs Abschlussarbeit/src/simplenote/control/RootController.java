@@ -5,15 +5,14 @@ package simplenote.control;
 
 import java.io.IOException;
 
-import simplenote.Main;
-import simplenote.model.Note;
-import simplenote.model.Vault;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import simplenote.Main;
+import simplenote.model.Note;
+import simplenote.model.Vault;
 
 /**
  * @author Claudio Marangon
@@ -80,7 +79,9 @@ public class RootController {
     
     @FXML
     public void showEditNote() {
+        this.setSelectedNote(selectedNote);
         System.out.println("show edit note");
+        this.loadEditNotelayout();
     }
     
     @FXML
@@ -93,23 +94,22 @@ public class RootController {
     /* Layouts & Controllers */
     
     public void loadNoteOverviewLayout() {
-        try {
-            // Load person overview.
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("../view/NoteOverviewLayout.fxml"));
-
-            // Set person overview into the center of root layout.
-            this.getRootLayout().setCenter((AnchorPane) loader.load());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadLayout("../view/NoteOverviewLayout.fxml");
     }
     
     public void loadAddNoteLayout() {
+        loadLayout("../view/AddNoteLayout.fxml");
+    }
+    
+    public void loadEditNotelayout() {
+        loadLayout("../view/EditNoteLayout.fxml");
+    }
+    
+    private void loadLayout(String layoutFile) {
         try {
             // Load person overview.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("../view/AddNoteLayout.fxml"));
+            loader.setLocation(getClass().getResource(layoutFile));
 
             // Set person overview into the center of root layout.
             this.getRootLayout().setCenter((AnchorPane) loader.load());
@@ -150,5 +150,13 @@ public class RootController {
     
     public Vault getVault() {
         return this.vault;
+    }
+    
+    public void setSelectedNote(Note note) {
+        this.selectedNote = note;
+    }
+    
+    public Note getSelectedNote() {
+        return this.selectedNote;
     }
 }
