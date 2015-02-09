@@ -44,7 +44,6 @@ public class Vault {
 
     public void read() {
         ObjectInputStream inputStream;
-        System.out.println("start read");
         try {
             inputStream = new ObjectInputStream(new FileInputStream(this.vaultFile));
             Note note = null;
@@ -72,20 +71,16 @@ public class Vault {
     }
 
     public boolean save() {
-        System.out.println("start save");
         ObjectOutputStream outputStream;
         try {
             outputStream = new ObjectOutputStream(new FileOutputStream(this.vaultFile));
             for(Note note : this.notes) {
-                System.out.println("save " + note);
                 if(note != null) {
-                    System.out.println("notnull->writeobj");
                     outputStream.writeObject(note);
                 }
             }
             outputStream.flush();
             outputStream.close();
-            System.out.println("close");
         } catch (FileNotFoundException e) {
             System.out.println("Tresordatei nicht gefunden!");
             e.printStackTrace();
@@ -95,14 +90,12 @@ public class Vault {
             e.printStackTrace();
             return false;
         }
-        System.out.println("finish");
         return true;
     }
     
     public void delete(Note deleteNote) {
         for(Note note : this.getNotes()) {
             if(deleteNote.equals(note)) {
-                System.out.println("found");
                 int indexOfNote = this.notes.indexOf(note);
                 System.out.println(indexOfNote);
                 this.notes.remove(indexOfNote);

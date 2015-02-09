@@ -70,7 +70,7 @@ public class NoteOverviewController {
             public void changed(ObservableValue<? extends Note> observable, Note oldValue, Note newValue) {
                 currentNote = newValue;
                 noteTitle.setText(newValue.getTitle());
-                noteDate.setText("" + newValue.getCreationDate());
+                noteDate.setText("" + newValue.getCreationDate()); // TODO: pretty format the date
                 
                 WebEngine we = noteText.getEngine();
                 we.loadContent(newValue.getText());
@@ -86,5 +86,6 @@ public class NoteOverviewController {
     @FXML
     public void deleteNote() {
         this.rc.getVault().delete(this.currentNote);
+        this.rc.showOverview();
     }
 }

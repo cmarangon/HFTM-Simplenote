@@ -159,7 +159,6 @@ public class Main extends Application {
             rc.setRootLayout(rootLayout);
             rc.showOverview();
 
-            mainStage.setTitle("simpleNote");
             mainStage.setScene(new Scene(rootLayout));
             mainStage.show();
         } catch (IOException e) {
