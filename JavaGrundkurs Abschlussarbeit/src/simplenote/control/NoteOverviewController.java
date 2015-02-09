@@ -68,12 +68,22 @@ public class NoteOverviewController {
 
             @Override
             public void changed(ObservableValue<? extends Note> observable, Note oldValue, Note newValue) {
-                currentNote = newValue;
-                noteTitle.setText(newValue.getTitle());
-                noteDate.setText("" + newValue.getCreationDate()); // TODO: pretty format the date
                 
                 WebEngine we = noteText.getEngine();
-                we.loadContent(newValue.getText());
+                currentNote = newValue;
+                
+                if(newValue != null) {
+                    
+                    noteTitle.setText(newValue.getTitle());
+                    noteDate.setText("" + newValue.getCreationDate()); // TODO: pretty format the date
+                    
+                    
+                    we.loadContent(newValue.getText());
+                } else {
+                    noteTitle.setText("");
+                    noteDate.setText("");
+                    we.loadContent("<em>keine Notizen vorhanden</em>");
+                }
             }
         });
     }
@@ -86,12 +96,14 @@ public class NoteOverviewController {
     
     @FXML
     public void deleteNote() {
-        if(this.currentNote != null) {
-            // remove from list
-            this.noteData.remove(this.currentNote);
+        if(this.currentNote != null && this.noteData.contains(this.currentNote)) {
             
             // remove from storage
             this.rc.getVault().delete(this.currentNote);
+            
+            // remove from list
+            this.noteData.remove(this.currentNote);
+            
         }
     }
 }

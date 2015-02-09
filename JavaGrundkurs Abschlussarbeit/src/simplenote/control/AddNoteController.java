@@ -3,10 +3,21 @@
  */
 package simplenote.control;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.web.HTMLEditor;
+import javafx.stage.FileChooser;
 import simplenote.model.Note;
 
 /**
@@ -28,6 +39,11 @@ public class AddNoteController {
     @FXML
     private ToggleButton noteShare;
     
+    @FXML
+    private ListView<Object> attachmentList;
+    
+    
+    private ObservableList<Object> attachmentData = FXCollections.observableArrayList();
     
     /**
      * 
@@ -38,17 +54,20 @@ public class AddNoteController {
 
     
     @FXML
-    public void initialize() {}
+    public void initialize() {
+        this.newNote = new Note();
+        this.attachmentList.setItems(this.attachmentData);
+    }
     
     /* FXML Actions */
 
     @FXML
     public void saveNote() {
-        String nTitle = noteTitle.getText();
-        String nText = noteText.getHtmlText();
+        String nTitle = this.noteTitle.getText();
+        String nText = this.noteText.getHtmlText();
         
-        newNote = new Note(nTitle);
-        newNote.setText(nText);
+        this.newNote.setTitle(nTitle);
+        this.newNote.setText(nText);
         
         this.rc.getVault().add(newNote);
         if(this.rc.getVault().save()){
@@ -65,6 +84,12 @@ public class AddNoteController {
     
     @FXML
     public void addFile() {
+        FileChooser fileChooser = new FileChooser();
+        List<File> imageList = fileChooser.showOpenMultipleDialog(this.rc.getPrimaryStage());
         
+        if (imageList != null) {
+            this.newNote.addFiles(imageList);
+            this.attachmentData.addAll(imageList);
+        }
     }
 }

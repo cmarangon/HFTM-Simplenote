@@ -3,8 +3,11 @@
  */
 package simplenote.model;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Claudio Marangon, Ljubisa Markovic
@@ -19,8 +22,13 @@ public class Note implements Serializable {
     private Date creation_date;
     private String title;
     private String text;
+    private List<File> fileList;
     private Integer owner_id;
     private Integer[] shared_ids;
+    
+    public Note() {
+        this("","");
+    }
     
     public Note(String title) {
         this(title, "");
@@ -30,8 +38,14 @@ public class Note implements Serializable {
         this.creation_date = new Date();
         this.title = title;
         this.text = text;
+        this.fileList = new ArrayList<File>();
     }
     
+    public void addFiles(List<File> fileList) {
+        List<File> tmpList = this.getFileList();
+        tmpList.addAll(fileList);
+        this.setFileList(tmpList);
+    }
     
     @Override
     public String toString() {
@@ -80,5 +94,19 @@ public class Note implements Serializable {
      */
     public void setText(String text) {
         this.text = text;
+    }
+    
+    /**
+     * @return the fileList
+     */
+    public List<File> getFileList() {
+        return this.fileList;
+    }
+    
+    /**
+     * @param fileList
+     */
+    public void setFileList(List<File> fileList) {
+        this.fileList = fileList;
     }
 }

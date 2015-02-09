@@ -49,7 +49,6 @@ public class Vault {
             inputStream = new ObjectInputStream(new FileInputStream(this.vaultFile));
             Note note = null;
             while ((note = (Note) inputStream.readObject()) != null) {
-                System.out.println(note);
                 this.add(note);
             }
             inputStream.close();
@@ -97,9 +96,7 @@ public class Vault {
     public void delete(Note deleteNote) {
         for(Note note : this.getNotes()) {
             if(deleteNote.equals(note)) {
-                int indexOfNote = this.notes.indexOf(note);
-                System.out.println(indexOfNote);
-                this.notes.remove(indexOfNote);
+                this.notes.remove(this.notes.indexOf(note));
                 this.save();
                 break;
             }

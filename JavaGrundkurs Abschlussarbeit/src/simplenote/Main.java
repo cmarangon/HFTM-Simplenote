@@ -31,8 +31,7 @@ import simplenote.model.Vault;
  */
 public class Main extends Application {
     
-    private Stage mainStage;
-    
+    // Keeping the notes together and save
     private Vault vault;
     
     // LoadingScreen elements
@@ -90,7 +89,7 @@ public class Main extends Application {
             vault = new Vault();
             
             updateMessage(String.valueOf(vault.getNotes().size()) + " Notizen geladen");
-            //Thread.sleep(1500);
+            Thread.sleep(500);
             
             return vault.getNotes().size();
         }
@@ -149,23 +148,26 @@ public class Main extends Application {
      */
     private void showMainStage() {
         try {
-            mainStage = new Stage();
-            mainStage.setTitle("simpleNote");
             
             // Load root layout from fxml file.
             RootController rc = RootController.getInstance();
-            rc.setVault(this.vault);
-
             FXMLLoader loader = new FXMLLoader();
+            BorderPane rootLayout;
+            Scene scene;
+            
+            rc.setVault(this.vault);
             loader.setController(rc);
             loader.setLocation(getClass().getResource("view/RootLayout.fxml"));
-            BorderPane rootLayout = (BorderPane) loader.load();
+            rootLayout = (BorderPane) loader.load();
             rc.setRootLayout(rootLayout);
             rc.showOverview();
 
-            Scene scene = new Scene(rootLayout);
+            scene = new Scene(rootLayout);
+            // Add stylesheet to scene
             scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
             
+            Stage mainStage = new Stage();
+            mainStage.setTitle("simpleNote");
             mainStage.setScene(scene);
             mainStage.show();
         } catch (IOException e) {
