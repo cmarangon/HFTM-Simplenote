@@ -160,7 +160,10 @@ public class Main extends Application {
             rc.setRootLayout(rootLayout);
             rc.showOverview();
 
-            mainStage.setScene(new Scene(rootLayout));
+            Scene scene = new Scene(rootLayout);
+            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+            
+            mainStage.setScene(scene);
             mainStage.show();
         } catch (IOException e) {
             e.printStackTrace();

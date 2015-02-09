@@ -39,7 +39,7 @@ public class EditNoteController {
     
     @FXML
     public void initialize() {
-        //this.note = 
+        //this.note = this.rc.getSelectedNote();
     }
     
     /* FXML Actions */

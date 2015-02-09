@@ -6,6 +6,7 @@ package simplenote.control;
 import java.io.IOException;
 
 import simplenote.Main;
+import simplenote.model.Note;
 import simplenote.model.Vault;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,14 +22,14 @@ import javafx.stage.Stage;
 public class RootController {
     private static RootController instance = null;
     
-    private Vault vault;
-    
     private Stage primaryStage;
-    protected Main mainApp;
+    private Main mainApp;
     private BorderPane rootLayout;
     
-    public AddNoteController anc;
-    public NoteOverviewController noc;
+    private Vault vault;
+    
+    private Note selectedNote;
+    
     
     public RootController() {
         //System.out.println("RC");
