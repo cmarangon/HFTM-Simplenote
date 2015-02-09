@@ -1,4 +1,5 @@
 /**
+ * @author Claudio Marangon, Ljubisa Markovic
  * 
  */
 package simplenote.model;

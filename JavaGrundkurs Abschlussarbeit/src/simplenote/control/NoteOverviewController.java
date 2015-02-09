@@ -86,7 +86,12 @@ public class NoteOverviewController {
     
     @FXML
     public void deleteNote() {
-        this.rc.getVault().delete(this.currentNote);
-        this.rc.showOverview();
+        if(this.currentNote != null) {
+            // remove from list
+            this.noteData.remove(this.currentNote);
+            
+            // remove from storage
+            this.rc.getVault().delete(this.currentNote);
+        }
     }
 }

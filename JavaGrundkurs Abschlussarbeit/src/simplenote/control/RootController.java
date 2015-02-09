@@ -15,10 +15,11 @@ import simplenote.model.Note;
 import simplenote.model.Vault;
 
 /**
- * @author Claudio Marangon
+ * @author Claudio Marangon, Ljubisa Markovic
  *
  */
 public class RootController {
+    // singleton
     private static RootController instance = null;
     
     private Stage primaryStage;
@@ -31,67 +32,48 @@ public class RootController {
     
     
     public RootController() {
-        //System.out.println("RC");
     }
     
     public static RootController getInstance() {
+        // lazy singleton
         if (null == instance) {
-            System.out.println("new");
             instance = new RootController();
         }
-        System.out.println("return RC");
         return instance;
     }
 
     @FXML
     public void initialize() {
-        
-        System.out.println("init");
+        // init
     }
     
-    /*
-    public RootController(MainApp mApp, Stage pStage) {
-        System.out.println(this.hashCode());
-        setMainApp(mApp);
-        setPrimaryStage(pStage);
-        
-        initRootLayout();
-        
-        new CourseOverviewController(this);
-        //this.addCourseLayoutController = new AddCourseLayoutController(this);
-    }
-    */
     
-    
-    /* FXML Actions */
+    /* FXML ACTIONS  */
     
     @FXML
     public void showOverview() {
-        System.out.println("show overview");
         this.loadNoteOverviewLayout();
     }
     
     @FXML
     public void showAddNote() {
-        System.out.println("show add note");
         this.loadAddNoteLayout();
     }
     
     @FXML
     public void showEditNote() {
         this.setSelectedNote(selectedNote);
-        System.out.println("show edit note");
+        
         this.loadEditNotelayout();
     }
     
     @FXML
     public void closeApplication() {
-        System.out.println("close app");
         System.exit(0);
     }
     
     
-    /* Layouts & Controllers */
+    /* LAYOUTS & CONTROLLERS */
     
     public void loadNoteOverviewLayout() {
         loadLayout("../view/NoteOverviewLayout.fxml");

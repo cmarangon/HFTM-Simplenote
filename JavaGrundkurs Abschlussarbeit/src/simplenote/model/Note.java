@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author Claudio Marangon
+ * @author Claudio Marangon, Ljubisa Markovic
  *
  */
 public class Note implements Serializable {

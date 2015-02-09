@@ -24,7 +24,11 @@ import simplenote.control.RootController;
 import simplenote.interfaces.InitCompletionHandler;
 import simplenote.model.Vault;
 
-
+/**
+ * 
+ * @author Claudio Marangon, Ljubisa Markovic
+ *
+ */
 public class Main extends Application {
     
     private Stage mainStage;

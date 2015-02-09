@@ -10,7 +10,7 @@ import javafx.scene.web.HTMLEditor;
 import simplenote.model.Note;
 
 /**
- * @author claudio
+ * @author Claudio Marangon, Ljubisa Markovic
  *
  */
 public class AddNoteController {
