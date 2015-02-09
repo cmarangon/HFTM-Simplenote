@@ -16,7 +16,7 @@ import javafx.scene.web.WebView;
 import simplenote.model.Note;
 
 /**
- * @author claudio
+ * @author Claudio Marangon, Ljubisa Markovic
  *
  */
 public class NoteOverviewController {
