@@ -143,8 +143,6 @@ public class Main extends Application {
     /**
      * Show main stage
      * 
-     * 
-     * Br컴컴컴컴컴
      */
     private void showMainStage() {
         try {
