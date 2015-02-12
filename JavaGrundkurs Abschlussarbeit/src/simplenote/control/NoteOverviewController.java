@@ -65,7 +65,7 @@ public class NoteOverviewController {
     @FXML
     public void initialize() {
         this.noteList.setItems(this.noteData);
-        lblStatusText.setText("Anzahl gespeicherte Notizen: " + this.noteData.size());
+        lblStatusText.setText("Status: " + this.noteData.size() + " / 100");
         
         
         noteList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Note>() {
