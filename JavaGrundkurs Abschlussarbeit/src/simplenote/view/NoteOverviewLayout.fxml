@@ -10,9 +10,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="500.0" prefWidth="1000.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplenote.control.NoteOverviewController">
+<AnchorPane prefHeight="485.0" prefWidth="1000.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplenote.control.NoteOverviewController">
    <children>
-      <ListView fx:id="noteList" prefHeight="500.0" prefWidth="200.0" />
+      <ListView fx:id="noteList" prefHeight="446.0" prefWidth="200.0" />
       <WebView fx:id="noteText" layoutX="200.0" layoutY="60.0" prefHeight="440.0" />
       <Label fx:id="noteTitle" layoutX="210.0" layoutY="10.0">
          <font>
@@ -20,19 +20,20 @@
          </font>
       </Label>
       <Label fx:id="noteDate" layoutX="210.0" layoutY="40.0" styleClass="discreet" />
-      <Button fx:id="deleteBtn" layoutX="921.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteNote" text="Löschen" styleClass="button">
+      <Button fx:id="deleteBtn" layoutX="921.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteNote" styleClass="button" text="Löschen">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
          <effect>
             <Glow />
          </effect></Button>
-      <Button fx:id="editBtn" layoutX="828.0" layoutY="10.0" mnemonicParsing="false" onAction="#editNote" text="Bearbeiten" styleClass="button">
+      <Button fx:id="editBtn" layoutX="828.0" layoutY="10.0" mnemonicParsing="false" onAction="#editNote" styleClass="button" text="Bearbeiten">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
          <effect>
             <Glow />
          </effect></Button>
+      <Label fx:id="lblStatusText" layoutX="14.0" layoutY="454.0" prefHeight="17.0" prefWidth="178.0" text="Anzahl gespeicherte Notizen: 0" />
    </children>
 </AnchorPane>

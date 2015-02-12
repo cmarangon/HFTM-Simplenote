@@ -43,6 +43,9 @@ public class NoteOverviewController {
     @FXML
     private Button deleteBtn;
     
+    @FXML
+    private Label lblStatusText;
+    
     
     
     private ObservableList<Note> noteData = FXCollections.observableArrayList();
@@ -62,6 +65,7 @@ public class NoteOverviewController {
     @FXML
     public void initialize() {
         this.noteList.setItems(this.noteData);
+        lblStatusText.setText("Anzahl gespeicherte Notizen: " + this.noteData.size());
         
         
         noteList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Note>() {

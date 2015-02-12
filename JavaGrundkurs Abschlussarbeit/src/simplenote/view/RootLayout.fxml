@@ -17,11 +17,6 @@
               <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="Beenden" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Bearbeiten">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#showEditNote" text="Notiz bearbeiten" />
-            </items>
-          </Menu>
           <Menu mnemonicParsing="false" text="Hilfe">
             <items>
               <MenuItem mnemonicParsing="false" text="Hilfe" />
