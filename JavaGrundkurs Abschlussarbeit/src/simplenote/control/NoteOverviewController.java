@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import simplenote.model.Note;
@@ -45,6 +46,9 @@ public class NoteOverviewController {
     
     @FXML
     private Label lblStatusText;
+    
+    @FXML
+    private TextField searchText;
     
     
     
@@ -114,5 +118,11 @@ public class NoteOverviewController {
             // remove from list
             this.noteData.remove(this.currentNote);
         }
+    }
+    
+    @FXML
+    public void change() {
+        //System.out.println(this.searchText.getText());
+        //this.noteData.f
     }
 }
