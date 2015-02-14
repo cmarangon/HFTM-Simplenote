@@ -20,14 +20,14 @@
          </font>
       </Label>
       <Label fx:id="noteDate" layoutX="210.0" layoutY="40.0" styleClass="discreet" />
-      <Button fx:id="deleteBtn" layoutX="921.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteNote" styleClass="button" text="Löschen">
+      <Button fx:id="deleteBtn" layoutX="908.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteNote" prefHeight="25.0" prefWidth="73.0" styleClass="button" text="Löschen">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
          <effect>
             <Glow />
          </effect></Button>
-      <Button fx:id="editBtn" layoutX="828.0" layoutY="10.0" mnemonicParsing="false" onAction="#editNote" styleClass="button" text="Bearbeiten">
+      <Button fx:id="editBtn" layoutX="822.0" layoutY="10.0" mnemonicParsing="false" onAction="#editNote" styleClass="button" text="Bearbeiten">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -35,5 +35,13 @@
             <Glow />
          </effect></Button>
       <Label fx:id="lblStatusText" layoutX="14.0" layoutY="466.0" prefHeight="5.0" prefWidth="178.0" text="Status: " />
+      <Button layoutX="732.0" layoutY="10.0" mnemonicParsing="false" onAction="#addNote" prefHeight="25.0" prefWidth="73.0" text="Neu">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <Glow />
+         </effect>
+      </Button>
    </children>
 </AnchorPane>

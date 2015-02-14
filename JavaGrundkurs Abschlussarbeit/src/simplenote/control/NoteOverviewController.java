@@ -38,6 +38,9 @@ public class NoteOverviewController {
     private ListView<Note> noteList;
     
     @FXML
+    private Button addBtn;
+    
+    @FXML
     private Button editBtn;
     
     @FXML
@@ -65,7 +68,7 @@ public class NoteOverviewController {
     @FXML
     public void initialize() {
         this.noteList.setItems(this.noteData);
-        lblStatusText.setText("Status: " + this.noteData.size() + " / 100");
+        lblStatusText.setText("Status: " + this.noteData.size());
         
         
         noteList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Note>() {
@@ -95,6 +98,11 @@ public class NoteOverviewController {
                 }
             }
         });
+    }
+    
+    @FXML
+    public void addNote() {
+      this.rc.showAddNote();
     }
     
     @FXML
