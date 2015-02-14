@@ -1,6 +1,17 @@
+/**
+ * This is the stylesheet for all design related changes in the app
+ * 
+ * @author: Claudio Marangon, Ljubisa Markovic
+ * 
+ */
+
 /* LABELS */
 .discreet {
     -fx-text-fill:#a8a8a8;
+}
+.error {
+    -fx-focus-color:#ff0000;
+    -fx-border-color:#ff0000;
 }
 
 /* BUTTONS */

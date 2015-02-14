@@ -81,8 +81,13 @@ public class NoteOverviewController {
                     noteTitle.setText(newValue.getTitle());
                     noteDate.setText("" + newValue.getCreationDate()); // TODO: pretty format the date
                     
+                    // change content to noneditable mode
+                    String html = newValue.getText();
+                    if(html.contains("contenteditable=\"true\"")){
+                        html=html.replace("contenteditable=\"true\"", "contenteditable=\"false\"");
+                    }
                     
-                    we.loadContent(newValue.getText());
+                    we.loadContent(html);
                 } else {
                     noteTitle.setText("");
                     noteDate.setText("");
@@ -100,6 +105,7 @@ public class NoteOverviewController {
     
     @FXML
     public void deleteNote() {
+        // check if something is selected and selected note is in data
         if(this.currentNote != null && this.noteData.contains(this.currentNote)) {
             
             // remove from storage
@@ -107,7 +113,6 @@ public class NoteOverviewController {
             
             // remove from list
             this.noteData.remove(this.currentNote);
-            
         }
     }
 }

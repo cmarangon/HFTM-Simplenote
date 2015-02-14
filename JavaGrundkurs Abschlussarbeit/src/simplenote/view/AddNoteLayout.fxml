@@ -7,12 +7,18 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplenote.control.AddNoteController">
    <children>
-      <HTMLEditor fx:id="noteText" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="10.0" layoutY="50.0" prefHeight="400.0" prefWidth="750.0" />
       <TextField fx:id="noteTitle" layoutX="10.0" layoutY="15.0" promptText="Titel" />
+      <HTMLEditor fx:id="noteText" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;false&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="10.0" layoutY="50.0" prefHeight="400.0" prefWidth="750.0" />
       <ToggleButton fx:id="noteShare" layoutX="937.0" layoutY="15.0" mnemonicParsing="false" text="Teilen" />
       <Button layoutX="681.0" layoutY="460.0" mnemonicParsing="false" onAction="#saveNote" text="Speichern" />
-      <Button layoutX="867.0" layoutY="460.0" mnemonicParsing="false" onAction="#addFile" text="+ Datei" />
-      <Button layoutX="934.0" layoutY="460.0" mnemonicParsing="false" onAction="#addLink" text="+ Link" />
-      <ListView fx:id="attachmentList" layoutX="770.0" layoutY="50.0" prefHeight="400.0" prefWidth="220.0" />
+      <Button layoutX="936.0" layoutY="300.0" mnemonicParsing="false" onAction="#addFile" text="+ Bild" />
+      <Button layoutX="934.0" layoutY="426.0" mnemonicParsing="false" onAction="#addLink" text="+ Link" />
+      <ScrollPane hbarPolicy="NEVER" layoutX="770.0" layoutY="50.0" prefHeight="240.0" prefWidth="220.0">
+         <content>
+            <VBox fx:id="attachmentList" prefHeight="233.0" prefWidth="220.0" />
+         </content>
+      </ScrollPane>
+      <ListView layoutX="770.0" layoutY="341.0" prefHeight="75.0" prefWidth="220.0" />
+      <TextField fx:id="link" layoutX="770.0" layoutY="426.0" prefHeight="26.0" prefWidth="157.0" />
    </children>
 </AnchorPane>

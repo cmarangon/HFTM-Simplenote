@@ -3,10 +3,17 @@
  */
 package simplenote.control;
 
+import java.io.File;
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
+import javafx.stage.FileChooser;
 import simplenote.model.Note;
 
 /**
@@ -28,6 +35,8 @@ public class EditNoteController {
     @FXML
     private ToggleButton noteShare;
     
+    @FXML
+    private VBox attachmentList;
     
     /**
      * 
@@ -42,6 +51,10 @@ public class EditNoteController {
         this.note = this.rc.getSelectedNote();
         noteTitle.setText(this.note.getTitle());
         noteText.setHtmlText(this.note.getText());
+        for(File f : this.note.getFileList()) {
+            Image img = new Image(f.toURI().toString(), 200, 200, true, true);
+            attachmentList.getChildren().add(new ImageView(img));
+        }
     }
     
     /* FXML Actions */
@@ -69,6 +82,15 @@ public class EditNoteController {
     
     @FXML
     public void addFile() {
+        FileChooser fileChooser = new FileChooser();
+        List<File> imageList = fileChooser.showOpenMultipleDialog(this.rc.getPrimaryStage());
         
+        if (imageList != null) {
+            for(File f : imageList) {
+                Image img = new Image(f.toURI().toString(), 200, 200, true, true);
+                attachmentList.getChildren().add(new ImageView(img));
+            }
+            this.note.addFiles(imageList);
+        }
     }
 }

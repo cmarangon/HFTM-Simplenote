@@ -3,19 +3,19 @@
  */
 package simplenote.control;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
 import simplenote.model.Note;
@@ -25,6 +25,8 @@ import simplenote.model.Note;
  *
  */
 public class AddNoteController {
+
+    private final String HTML_EMPTY = "<html dir=\"ltr\"><head></head><body contenteditable=\"true\"></body></html>";
 
     private RootController rc;
     private Note newNote;
@@ -40,10 +42,16 @@ public class AddNoteController {
     private ToggleButton noteShare;
     
     @FXML
-    private ListView<Object> attachmentList;
+    private VBox pictureList;
+    
+    @FXML
+    private TextField link;
+    
+    @FXML
+    private ListView<String> linkList;
     
     
-    private ObservableList<Object> attachmentData = FXCollections.observableArrayList();
+    private ObservableList<String> linkData = FXCollections.observableArrayList();
     
     /**
      * 
@@ -56,30 +64,39 @@ public class AddNoteController {
     @FXML
     public void initialize() {
         this.newNote = new Note();
-        this.attachmentList.setItems(this.attachmentData);
+        this.linkList.setItems(linkData);
     }
     
     /* FXML Actions */
 
     @FXML
     public void saveNote() {
-        String nTitle = this.noteTitle.getText();
-        String nText = this.noteText.getHtmlText();
-        
-        this.newNote.setTitle(nTitle);
-        this.newNote.setText(nText);
-        
-        this.rc.getVault().add(newNote);
-        if(this.rc.getVault().save()){
-            this.rc.showOverview();
+        // text is required
+        if(! this.noteText.getHtmlText().equals(HTML_EMPTY)) {
+            String nTitle = this.noteTitle.getText();
+            String nText = this.noteText.getHtmlText();
+            
+            if(nTitle.isEmpty()) {
+                nTitle = nText.substring(0, 10);
+            }
+            
+            this.newNote.setTitle(nTitle);
+            this.newNote.setText(nText);
+            
+            this.rc.getVault().add(newNote);
+            if(this.rc.getVault().save()){
+                this.rc.showOverview();
+            } else {
+                System.out.println("ERROR ON SAVING NOTE");
+            }
         } else {
-            System.out.println("ERROR ON SAVING NOTE");
+            this.noteText.getStyleClass().add("error");
         }
     }
     
     @FXML
     public void addLink() {
-        
+        this.linkData.add(this.link.getText());
     }
     
     @FXML
@@ -88,8 +105,11 @@ public class AddNoteController {
         List<File> imageList = fileChooser.showOpenMultipleDialog(this.rc.getPrimaryStage());
         
         if (imageList != null) {
+            for(File f : imageList) {
+                Image img = new Image(f.toURI().toString(), 200, 200, true, true);
+                pictureList.getChildren().add(new ImageView(img));
+            }
             this.newNote.addFiles(imageList);
-            this.attachmentData.addAll(imageList);
         }
     }
 }
