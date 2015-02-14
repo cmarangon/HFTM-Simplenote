@@ -4,6 +4,7 @@
 package simplenote.control;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Platform;
@@ -77,7 +78,7 @@ public class AddNoteController {
             String nText = this.noteText.getHtmlText();
             
             if(nTitle.isEmpty()) {
-                nTitle = nText.substring(0, 10);
+                nTitle = "Notiz vom " + this.newNote.getCreationDate();
             }
             
             this.newNote.setTitle(nTitle);
