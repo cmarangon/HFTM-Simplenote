@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
@@ -36,7 +37,13 @@ public class EditNoteController {
     private ToggleButton noteShare;
     
     @FXML
-    private VBox attachmentList;
+    private VBox pictureList;
+    
+    @FXML
+    private TextField link;
+    
+    @FXML
+    private ListView<String> linkList;
     
     /**
      * 
@@ -53,7 +60,7 @@ public class EditNoteController {
         noteText.setHtmlText(this.note.getText());
         for(File f : this.note.getFileList()) {
             Image img = new Image(f.toURI().toString(), 200, 200, true, true);
-            attachmentList.getChildren().add(new ImageView(img));
+            pictureList.getChildren().add(new ImageView(img));
         }
     }
     
@@ -88,7 +95,7 @@ public class EditNoteController {
         if (imageList != null) {
             for(File f : imageList) {
                 Image img = new Image(f.toURI().toString(), 200, 200, true, true);
-                attachmentList.getChildren().add(new ImageView(img));
+                pictureList.getChildren().add(new ImageView(img));
             }
             this.note.addFiles(imageList);
         }

@@ -12,8 +12,8 @@
 
 <AnchorPane prefHeight="485.0" prefWidth="1000.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplenote.control.NoteOverviewController">
    <children>
-      <ListView fx:id="noteList" prefHeight="451.0" prefWidth="200.0" />
-      <WebView fx:id="noteText" layoutX="200.0" layoutY="60.0" prefHeight="440.0" />
+      <ListView fx:id="noteList" layoutY="30.0" prefHeight="451.0" prefWidth="200.0" />
+      <WebView fx:id="noteText" layoutX="200.0" layoutY="60.0" prefHeight="350.0" prefWidth="560.0" />
       <Label fx:id="noteTitle" layoutX="210.0" layoutY="10.0">
          <font>
             <Font name="System Bold" size="24.0" />
@@ -43,5 +43,25 @@
             <Glow />
          </effect>
       </Button>
+      <TextField fx:id="searchText" layoutY="2.0" onKeyReleased="#change" prefHeight="26.0" prefWidth="120.0" promptText="Suchen" />
+      <RadioButton fx:id="sortingUp" layoutX="131.0" layoutY="6.0" mnemonicParsing="false" text="↑">
+         <font>
+            <Font size="12.0" />
+         </font>
+         <toggleGroup>
+            <ToggleGroup fx:id="sorting" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="sortingDown" layoutX="165.0" layoutY="6.0" mnemonicParsing="false" text="↓" toggleGroup="$sorting">
+         <font>
+            <Font size="12.0" />
+         </font>
+      </RadioButton>
+      <ScrollPane hbarPolicy="NEVER" layoutX="770.0" layoutY="60.0" prefHeight="440.0" prefWidth="220.0">
+         <content>
+            <VBox fx:id="attachmentList" prefHeight="233.0" prefWidth="220.0" />
+         </content>
+      </ScrollPane>
+      <ListView layoutX="200.0" layoutY="410.0" prefHeight="90.0" prefWidth="560.0" />
    </children>
 </AnchorPane>

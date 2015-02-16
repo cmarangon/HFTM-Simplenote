@@ -77,7 +77,7 @@ public class AddNoteController {
             String nText = this.noteText.getHtmlText();
             
             if(nTitle.isEmpty()) {
-                nTitle = nText.substring(0, 10);
+                nTitle = "Notiz vom " + this.newNote.getCreationDate();
             }
             
             this.newNote.setTitle(nTitle);

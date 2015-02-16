@@ -15,9 +15,10 @@
       <Button layoutX="934.0" layoutY="460.0" mnemonicParsing="false" onAction="#addLink" text="+ Link" />
       <ScrollPane hbarPolicy="NEVER" layoutX="770.0" layoutY="50.0" prefHeight="280.0" prefWidth="220.0">
          <content>
-            <VBox fx:id="attachmentList" prefHeight="233.0" prefWidth="220.0" />
+            <VBox fx:id="pictureList" prefHeight="233.0" prefWidth="220.0" />
          </content>
       </ScrollPane>
-      <ListView layoutX="770.0" layoutY="374.0" prefHeight="75.0" prefWidth="220.0" />
+      <ListView fx:id="linkList" layoutX="770.0" layoutY="341.0" prefHeight="75.0" prefWidth="220.0" />
+      <TextField fx:id="link" layoutX="770.0" layoutY="426.0" prefHeight="26.0" prefWidth="157.0" />
    </children>
 </AnchorPane>
