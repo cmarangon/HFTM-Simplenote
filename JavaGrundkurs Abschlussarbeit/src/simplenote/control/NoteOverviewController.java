@@ -14,7 +14,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -65,6 +67,14 @@ public class NoteOverviewController {
     @FXML
     private TextField searchField;
     
+    @FXML
+    private RadioButton sortingUpButton;
+    
+    @FXML
+    private RadioButton sortingDownButton;
+    
+    @FXML
+    private ToggleGroup sortingGroup;
     
     
     /**
@@ -81,8 +91,8 @@ public class NoteOverviewController {
     @FXML
     public void initialize() {
         this.noteList.setItems(this.noteData);
-        statusLabel.setText("Status: " + this.noteData.size() + " / 100");
         
+        statusLabel.setText("Status: " + this.noteData.size() + " / 100");
         
         noteList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Note>() {
 
@@ -95,14 +105,26 @@ public class NoteOverviewController {
                     
                     titleLabel.setText(newValue.getTitle());
                     dateLabel.setText("" + newValue.getCreationDate()); // TODO: pretty format the date
+                    
+                    // clear and rebuild link list
+                    linkData.clear();
                     if(newValue.getLinkList() != null) {
                         linkData.addAll(newValue.getLinkList());
-                        linkList.setItems(linkData);
                     }
+                    linkList.setItems(linkData);
+                    
+                    // clear and rebuild picture list
+                    pictureList.getChildren().clear();
                     if(newValue.getPictureList() != null) {
-                        for(File f : newValue.getPictureList()) {
-                            Image img = new Image(f.toURI().toString(), 200, 200, true, true);
-                            pictureList.getChildren().add(new ImageView(img));
+                        ImageView iv;
+                        for(File img : newValue.getPictureList()) {
+                            iv = new ImageView();
+                            iv.setImage(new Image(img.toURI().toString()));
+                            iv.setFitHeight(200);
+                            iv.setFitWidth(200);
+                            iv.setPreserveRatio(true);
+                            iv.setSmooth(true);
+                            pictureList.getChildren().add(iv);
                         }
                     }
                     
@@ -120,6 +142,11 @@ public class NoteOverviewController {
                 }
             }
         });
+    }
+    
+    @FXML
+    public void addNote() {
+      this.rc.showAddNote();
     }
     
     @FXML

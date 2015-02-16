@@ -11,7 +11,7 @@
       <HTMLEditor fx:id="textField" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;false&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="10.0" layoutY="50.0" prefHeight="400.0" prefWidth="750.0" />
       <ToggleButton fx:id="shareButton" layoutX="937.0" layoutY="15.0" mnemonicParsing="false" text="Teilen" />
       <Button layoutX="681.0" layoutY="460.0" mnemonicParsing="false" onAction="#saveNote" text="Speichern" />
-      <Button layoutX="936.0" layoutY="300.0" mnemonicParsing="false" onAction="#addFile" text="+ Bild" />
+      <Button layoutX="936.0" layoutY="300.0" mnemonicParsing="false" onAction="#addPicture" text="+ Bild" />
       <Button layoutX="934.0" layoutY="426.0" mnemonicParsing="false" onAction="#addLink" text="+ Link" />
       <ScrollPane hbarPolicy="NEVER" layoutX="770.0" layoutY="50.0" prefHeight="240.0" prefWidth="220.0">
          <content>

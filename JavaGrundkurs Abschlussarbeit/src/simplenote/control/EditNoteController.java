@@ -32,20 +32,20 @@ public class EditNoteController {
     
     
     @FXML
-    private TextField noteTitle;
+    private TextField titleField;
     
     @FXML
-    private HTMLEditor noteText;
+    private HTMLEditor textField;
     
     @FXML
-    private ToggleButton noteShare;
+    private ToggleButton shareButton;
     
     @FXML
     private VBox pictureList;
     private ArrayList<File> pictureData;
     
     @FXML
-    private TextField link;
+    private TextField linkField;
     
     @FXML
     private ListView<URL> linkList;
@@ -62,11 +62,28 @@ public class EditNoteController {
     @FXML
     public void initialize() {
         this.note = this.rc.getSelectedNote();
-        noteTitle.setText(this.note.getTitle());
-        noteText.setHtmlText(this.note.getText());
-        for(File f : this.note.getPictureList()) {
-            Image img = new Image(f.toURI().toString(), 200, 200, true, true);
-            pictureList.getChildren().add(new ImageView(img));
+        
+        // title
+        titleField.setText(this.note.getTitle());
+        
+        // text
+        textField.setHtmlText(this.note.getText());
+        
+        // links
+        for(URL url : this.note.getLinkList()) {
+            linkData.add(url);
+        }
+        linkList.setItems(linkData);
+        
+        // pictures
+        for(File img : this.note.getPictureList()) {
+            ImageView iv = new ImageView();
+            iv.setImage(new Image(img.toURI().toString()));
+            iv.setFitHeight(200);
+            iv.setFitWidth(200);
+            iv.setPreserveRatio(true);
+            iv.setSmooth(true);
+            this.pictureList.getChildren().add(iv);
         }
     }
     
@@ -74,13 +91,12 @@ public class EditNoteController {
 
     @FXML
     public void saveNote() {
-        String nTitle = noteTitle.getText();
-        String nText = noteText.getHtmlText();
+        String nTitle = titleField.getText();
+        String nText = textField.getHtmlText();
         
         this.note.setTitle(nTitle);
         this.note.setText(nText);
         
-        //this.rc.getVault().add(note);
         if(this.rc.getVault().save()){
             this.rc.showOverview();
         } else {
@@ -94,15 +110,21 @@ public class EditNoteController {
     }
     
     @FXML
-    public void addFile() {
+    public void addPicture() {
         FileChooser fileChooser = new FileChooser();
         List<File> pList = fileChooser.showOpenMultipleDialog(this.rc.getPrimaryStage());
         
         if (pList != null) {
-            this.pictureData.addAll(pList);
             for(File f : pList) {
-                Image img = new Image(f.toURI().toString(), 200, 200, true, true);
-                this.pictureList.getChildren().add(new ImageView(img));
+                this.pictureData.add(f);
+                
+                ImageView iv = new ImageView();
+                iv.setImage(new Image(f.toURI().toString()));
+                iv.setFitHeight(200);
+                iv.setFitWidth(200);
+                iv.setPreserveRatio(true);
+                iv.setSmooth(true);
+                this.pictureList.getChildren().add(iv);
             }
         }
     }

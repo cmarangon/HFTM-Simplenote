@@ -55,7 +55,6 @@ public class RootController {
         this.loadNoteOverviewLayout();
     }
     
-    @FXML
     public void showAddNote() {
         this.loadAddNoteLayout();
     }

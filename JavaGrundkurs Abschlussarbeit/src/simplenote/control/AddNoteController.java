@@ -87,7 +87,11 @@ public class AddNoteController {
             this.newNote.setTitle(nTitle);
             this.newNote.setText(nText);
             this.newNote.setPictureList(this.pictureData);
-            this.newNote.setLinkList((ArrayList<URL>) this.linkData); 
+            ArrayList<URL> al = new ArrayList<URL>();
+            for(URL url : this.linkData) {
+                al.add(url);
+            }
+            this.newNote.setLinkList(al); 
             
             
             this.rc.getVault().add(newNote);
@@ -129,15 +133,21 @@ public class AddNoteController {
     }
     
     @FXML
-    public void addFile() {
+    public void addPicture() {
         FileChooser fileChooser = new FileChooser();
         List<File> pList = fileChooser.showOpenMultipleDialog(this.rc.getPrimaryStage());
         
         if (pList != null) {
-            this.pictureData.addAll(pList);
             for(File f : pList) {
-                Image img = new Image(f.toURI().toString(), 200, 200, true, true);
-                this.pictureList.getChildren().add(new ImageView(img));
+                this.pictureData.add(f);
+                
+                ImageView iv = new ImageView();
+                iv.setImage(new Image(f.toURI().toString()));
+                iv.setFitHeight(200);
+                iv.setFitWidth(200);
+                iv.setPreserveRatio(true);
+                iv.setSmooth(true);
+                this.pictureList.getChildren().add(iv);
             }
         }
     }

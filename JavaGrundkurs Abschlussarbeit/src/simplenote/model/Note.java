@@ -23,8 +23,8 @@ public class Note implements Serializable {
     private Date creation_date;
     private String title;
     private String text;
-    private List<File> pictureList;
-    private List<URL> linkList;
+    private ArrayList<File> pictureList;
+    private ArrayList<URL> linkList;
     private Integer owner_id;
     private Integer[] shared_ids;
     
@@ -40,16 +40,10 @@ public class Note implements Serializable {
         this.creation_date = new Date();
         this.title = title;
         this.text = text;
+        this.linkList = new ArrayList<URL>();
         this.pictureList = new ArrayList<File>();
     }
     
-    /*
-    public void addFiles(List<File> fileList) {
-        List<File> tmpList = this.getFileList();
-        tmpList.addAll(fileList);
-        this.setPList(tmpList);
-    }
-    */
     
     @Override
     public String toString() {
@@ -110,21 +104,21 @@ public class Note implements Serializable {
     /**
      * @param pictureList
      */
-    public void setPictureList(List<File> pictureList) {
+    public void setPictureList(ArrayList<File> pictureList) {
         this.pictureList = pictureList;
     }
     
     /**
      * @return 
      */
-    public List<URL> getLinkList() {
+    public ArrayList<URL> getLinkList() {
         return this.linkList;
     }
     
     /**
      * @param linkList
      */
-    public void setLinkList(List<URL> linkList) {
+    public void setLinkList(ArrayList<URL> linkList) {
         this.linkList = linkList;
     }
 }
