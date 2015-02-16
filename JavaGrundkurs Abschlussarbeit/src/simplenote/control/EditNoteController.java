@@ -4,8 +4,12 @@
 package simplenote.control;
 
 import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -38,12 +42,14 @@ public class EditNoteController {
     
     @FXML
     private VBox pictureList;
+    private ArrayList<File> pictureData;
     
     @FXML
     private TextField link;
     
     @FXML
-    private ListView<String> linkList;
+    private ListView<URL> linkList;
+    private ObservableList<URL> linkData = FXCollections.observableArrayList();
     
     /**
      * 
@@ -58,7 +64,7 @@ public class EditNoteController {
         this.note = this.rc.getSelectedNote();
         noteTitle.setText(this.note.getTitle());
         noteText.setHtmlText(this.note.getText());
-        for(File f : this.note.getFileList()) {
+        for(File f : this.note.getPictureList()) {
             Image img = new Image(f.toURI().toString(), 200, 200, true, true);
             pictureList.getChildren().add(new ImageView(img));
         }
@@ -90,14 +96,14 @@ public class EditNoteController {
     @FXML
     public void addFile() {
         FileChooser fileChooser = new FileChooser();
-        List<File> imageList = fileChooser.showOpenMultipleDialog(this.rc.getPrimaryStage());
+        List<File> pList = fileChooser.showOpenMultipleDialog(this.rc.getPrimaryStage());
         
-        if (imageList != null) {
-            for(File f : imageList) {
+        if (pList != null) {
+            this.pictureData.addAll(pList);
+            for(File f : pList) {
                 Image img = new Image(f.toURI().toString(), 200, 200, true, true);
-                pictureList.getChildren().add(new ImageView(img));
+                this.pictureList.getChildren().add(new ImageView(img));
             }
-            this.note.addFiles(imageList);
         }
     }
 }

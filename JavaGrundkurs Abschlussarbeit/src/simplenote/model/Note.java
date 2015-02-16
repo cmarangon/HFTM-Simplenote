@@ -5,6 +5,7 @@ package simplenote.model;
 
 import java.io.File;
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,8 @@ public class Note implements Serializable {
     private Date creation_date;
     private String title;
     private String text;
-    private List<File> fileList;
+    private List<File> pictureList;
+    private List<URL> linkList;
     private Integer owner_id;
     private Integer[] shared_ids;
     
@@ -38,14 +40,16 @@ public class Note implements Serializable {
         this.creation_date = new Date();
         this.title = title;
         this.text = text;
-        this.fileList = new ArrayList<File>();
+        this.pictureList = new ArrayList<File>();
     }
     
+    /*
     public void addFiles(List<File> fileList) {
         List<File> tmpList = this.getFileList();
         tmpList.addAll(fileList);
-        this.setFileList(tmpList);
+        this.setPList(tmpList);
     }
+    */
     
     @Override
     public String toString() {
@@ -99,14 +103,28 @@ public class Note implements Serializable {
     /**
      * @return the fileList
      */
-    public List<File> getFileList() {
-        return this.fileList;
+    public List<File> getPictureList() {
+        return this.pictureList;
     }
     
     /**
-     * @param fileList
+     * @param pictureList
      */
-    public void setFileList(List<File> fileList) {
-        this.fileList = fileList;
+    public void setPictureList(List<File> pictureList) {
+        this.pictureList = pictureList;
+    }
+    
+    /**
+     * @return 
+     */
+    public List<URL> getLinkList() {
+        return this.linkList;
+    }
+    
+    /**
+     * @param linkList
+     */
+    public void setLinkList(List<URL> linkList) {
+        this.linkList = linkList;
     }
 }
