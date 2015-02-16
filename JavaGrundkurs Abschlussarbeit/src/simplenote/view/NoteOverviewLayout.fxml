@@ -54,13 +54,10 @@
             <ToggleGroup fx:id="sortingGroup" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="sortingDownButton" layoutX="165.0" layoutY="6.0" mnemonicParsing="false" text="↓" toggleGroup="$sorting">
+      <RadioButton fx:id="sortingDownButton" layoutX="165.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="↓" toggleGroup="$sortingGroup">
          <font>
             <Font size="12.0" />
          </font>
-         <toggleGroup>
-            <ToggleGroup fx:id="sortingGroup" />
-         </toggleGroup>
       </RadioButton>
       <ScrollPane hbarPolicy="NEVER" layoutX="770.0" layoutY="60.0" prefHeight="440.0" prefWidth="220.0">
          <content>

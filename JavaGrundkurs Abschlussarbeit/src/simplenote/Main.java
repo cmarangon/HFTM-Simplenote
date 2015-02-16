@@ -1,12 +1,17 @@
 package simplenote;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileLock;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXMLLoader;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -19,6 +24,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import simplenote.control.RootController;
 import simplenote.interfaces.InitCompletionHandler;
@@ -46,14 +52,36 @@ public class Main extends Application {
      * @param primaryStage
      */
     @Override
-    public void start(Stage primaryStage) {
-        showLoadingScreen(
-            primaryStage,
-            loadNotesTask,
-            () -> showMainStage()
-        );
+    public void start(Stage primaryStage) throws Exception {
+        final File file = new File("flag");
+        final RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
+        final FileLock fileLock = randomAccessFile.getChannel().tryLock();
         
-        new Thread(loadNotesTask).start();
+        if (fileLock != null) {
+            // normal starting procedure
+            primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent arg0) {
+                    try {
+                        fileLock.release();
+                        randomAccessFile.close();
+                    } catch (Exception ex) {
+                        System.out.print(ex.getMessage()); // TODO: Logging?
+                    }
+                }
+            });
+            
+            showLoadingScreen(
+                primaryStage,
+                loadNotesTask,
+                () -> showMainStage()
+            );
+            
+            new Thread(loadNotesTask).start();
+        } else {
+            // exit right away
+            Platform.exit();
+        }
     }
     
     
