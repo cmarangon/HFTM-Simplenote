@@ -4,6 +4,7 @@
 package simplenote.control;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ import simplenote.model.Note;
  */
 public class EditNoteController {
 
+    private final String HTML_EMPTY = "<html dir=\"ltr\"><head></head><body contenteditable=\"true\"></body></html>";
+    private final String DEFAULT_URL = "http://";
+    
     private RootController rc;
     private Note note;
     
@@ -42,7 +46,7 @@ public class EditNoteController {
     
     @FXML
     private VBox pictureList;
-    private ArrayList<File> pictureData;
+    private ArrayList<File> pictureData = new ArrayList<File>();;
     
     @FXML
     private TextField linkField;
@@ -77,6 +81,8 @@ public class EditNoteController {
         
         // pictures
         for(File img : this.note.getPictureList()) {
+            pictureData.add(img);
+            
             ImageView iv = new ImageView();
             iv.setImage(new Image(img.toURI().toString()));
             iv.setFitHeight(200);
@@ -91,22 +97,60 @@ public class EditNoteController {
 
     @FXML
     public void saveNote() {
-        String nTitle = titleField.getText();
-        String nText = textField.getHtmlText();
-        
-        this.note.setTitle(nTitle);
-        this.note.setText(nText);
-        
-        if(this.rc.getVault().save()){
-            this.rc.showOverview();
+     // text is required
+        if(! this.textField.getHtmlText().equals(HTML_EMPTY)) {
+
+            String nTitle = this.titleField.getText();
+            String nText = this.textField.getHtmlText();
+            
+            if(nTitle.isEmpty()) {
+                nTitle = "Notiz vom " + this.note.getCreationDate();
+            }
+            
+            this.note.setTitle(nTitle);
+            this.note.setText(nText);
+            this.note.setPictureList(this.pictureData);
+            ArrayList<URL> al = new ArrayList<URL>();
+            for(URL url : this.linkData) {
+                al.add(url);
+            }
+            this.note.setLinkList(al); 
+            
+            if(this.rc.getVault().save()){
+                this.rc.showOverview();
+            } else {
+                System.out.println("ERROR ON SAVING NOTE");
+            }
         } else {
-            System.out.println("ERROR ON SAVING NOTE");
+            this.textField.getStyleClass().add("error");
         }
     }
     
     @FXML
     public void addLink() {
+        boolean error = false;
+        URL url = null;
         
+        if(this.linkField.getText().startsWith(DEFAULT_URL) && 
+           this.linkField.getText().length() > DEFAULT_URL.length()) {
+            try {
+                url = new URL(this.linkField.getText()); // TODO: This only checks if protocol is set sooooo.....
+            } catch (MalformedURLException e) {
+                error = true;
+            }
+        } else {
+            error = true;
+        }
+        
+        
+        if(error) {
+            System.out.println("keine gültige url");
+            this.linkField.getStyleClass().add("error");
+        } else {
+            this.linkField.getStyleClass().remove("error");
+            this.linkData.add(url);
+            this.linkField.setText(DEFAULT_URL);
+        }
     }
     
     @FXML

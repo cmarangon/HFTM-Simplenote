@@ -53,7 +53,7 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        final File file = new File("flag");
+        final File file = new File("black_flag");
         final RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
         final FileLock fileLock = randomAccessFile.getChannel().tryLock();
         
