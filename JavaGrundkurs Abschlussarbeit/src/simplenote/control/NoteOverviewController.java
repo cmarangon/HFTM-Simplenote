@@ -5,7 +5,9 @@ package simplenote.control;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Comparator;
 
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -65,6 +67,7 @@ public class NoteOverviewController {
     
     @FXML
     private Label statusLabel;
+    private StringProperty statusText;
     
     @FXML
     private TextField searchField;
@@ -94,8 +97,10 @@ public class NoteOverviewController {
     public void initialize() {
         this.noteList.setItems(this.noteData);
         
-        statusLabel.setText("Status: " + this.noteData.size() + " / 100");
+        statusLabel.setText("Status: " + this.noteData.size() + " / " + this.noteData.size());
         
+        
+        /* Notes overview */
         noteList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Note>() {
 
             @Override
@@ -145,7 +150,7 @@ public class NoteOverviewController {
             }
         });
         
-        
+        /* Notes overview search field */
         FilteredList<Note> filteredData = new FilteredList<>(this.noteData, p -> true);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(note -> {
@@ -164,12 +169,23 @@ public class NoteOverviewController {
                 }
                 return false; // Does not match.
             });
+            
+            statusLabel.setText("Status: " + filteredData.size() + " / " + this.noteData.size());
         });
-        SortedList<Note> sortedData = new SortedList<>(filteredData);
-        //sortedData.comparatorProperty().bind(noteList.);
         
-
-        // 5. Add sorted (and filtered) data to the table.
+        SortedList<Note> sortedData = new SortedList<>(filteredData);
+        
+        
+        
+        /* Notes overview sorting */
+        sortingGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.equals(sortingDownButton)) {
+                sortedData.setComparator((Note n1, Note n2) -> n1.getTitle().toLowerCase().compareTo(n2.getTitle().toLowerCase()) * -1);
+            } else if(newValue.equals(sortingUpButton)) {
+                sortedData.setComparator((Note n1, Note n2) -> n1.getTitle().toLowerCase().compareTo(n2.getTitle().toLowerCase()));
+            }
+        });
+        
         noteList.setItems(sortedData);
     }
     

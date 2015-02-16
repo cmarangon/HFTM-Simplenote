@@ -54,7 +54,7 @@
             <ToggleGroup fx:id="sortingGroup" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="sortingDownButton" layoutX="165.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="↓" toggleGroup="$sortingGroup">
+      <RadioButton fx:id="sortingDownButton" layoutX="165.0" layoutY="6.0" mnemonicParsing="false" text="↓" toggleGroup="$sortingGroup">
          <font>
             <Font size="12.0" />
          </font>
