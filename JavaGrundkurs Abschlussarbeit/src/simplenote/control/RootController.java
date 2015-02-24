@@ -5,35 +5,40 @@ package simplenote.control;
 
 import java.io.IOException;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import simplenote.Main;
+import javafx.stage.WindowEvent;
+import simplenote.interfaces.IFXController;
 import simplenote.model.Note;
+import simplenote.model.Settings;
 import simplenote.model.Vault;
 
 /**
  * @author Claudio Marangon, Ljubisa Markovic
  *
  */
-public class RootController {
+public class RootController implements IFXController {
     // singleton
     private static RootController instance = null;
-    
-    private Stage primaryStage;
-    private Main mainApp;
+
+    private Stage rootStage;
+    private Scene rootScene;
     private BorderPane rootLayout;
-    
+
     private Vault vault;
-    
+
     private Note selectedNote;
-    
-    
+
+    private Settings settings;
+
     public RootController() {
     }
-    
+
     public static RootController getInstance() {
         // lazy singleton
         if (null == instance) {
@@ -42,102 +47,124 @@ public class RootController {
         return instance;
     }
 
+    /* FXML ACTIONS */
+
     @FXML
-    public void initialize() {
-        // init
+    private void initialize() {
+        this.settings = new Settings();
     }
-    
-    
-    /* FXML ACTIONS  */
-    
-    @FXML
-    public void showOverview() {
+
+    protected void showOverview() {
         this.loadNoteOverviewLayout();
     }
-    
-    public void showAddNote() {
+
+    protected void showAddNote() {
         this.loadAddNoteLayout();
     }
-    
-    @FXML
-    public void showEditNote() {
+
+    protected void showEditNote(Note selectedNote) {
         this.setSelectedNote(selectedNote);
-        
-        this.loadEditNotelayout();
+        if (selectedNote != null) {
+            this.loadEditNotelayout();
+        }
     }
-    
-    @FXML
-    public void closeApplication() {
-        System.exit(0);
-    }
-    
-    
+
     /* LAYOUTS & CONTROLLERS */
-    
-    public void loadNoteOverviewLayout() {
-        loadLayout("../view/NoteOverviewLayout.fxml");
+
+    private void loadNoteOverviewLayout() {
+        loadLayout("../view/NoteOverviewLayout.fxml", new NoteOverviewController());
     }
-    
-    public void loadAddNoteLayout() {
-        loadLayout("../view/AddNoteLayout.fxml");
+
+    private void loadAddNoteLayout() {
+        loadLayout("../view/EditNoteLayout.fxml", new AddNoteController());
     }
-    
-    public void loadEditNotelayout() {
-        loadLayout("../view/EditNoteLayout.fxml");
+
+    private void loadEditNotelayout() {
+        loadLayout("../view/EditNoteLayout.fxml", new EditNoteController());
     }
-    
-    private void loadLayout(String layoutFile) {
+
+    private void loadLayout(String layoutFile, IFXController controller) {
         try {
             // Load person overview.
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(layoutFile));
+            loader.setController(controller);
 
             // Set person overview into the center of root layout.
-            this.getRootLayout().setCenter((AnchorPane) loader.load());
+            this.getLayout().setCenter((AnchorPane) loader.load());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
-    /** GETTERS AND SETTERS **/
-    
-    public void setRootLayout(BorderPane rootLayout) {
+
+    public void init(Stage rootStage, Scene rootScene, BorderPane rootLayout) {
+        
+        this.rootStage = rootStage;
+        this.rootScene = rootScene;
         this.rootLayout = rootLayout;
+
+        this.rootStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent ev) {
+                settings.setHeight(rootStage.getHeight());
+                settings.setWidth(rootStage.getWidth());
+                settings.setPosX(rootStage.getX());
+                settings.setPosY(rootStage.getY());
+
+                settings.save();
+            }
+        });
+        /*
+        ChangeListener<Number> resizeListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                    Number oldValue, Number newValue) {
+                if(rootStage.widthProperty() != null && rootStage.heightProperty() != null) {
+                    System.out.println("Height: " + rootStage.heightProperty().get());
+                    System.out.println("Width: " + rootStage.widthProperty().get());
+                    System.out.println("-----------------");
+                }
+            }
+        };
+        this.rootStage.widthProperty().addListener(resizeListener);
+        this.rootStage.heightProperty().addListener(resizeListener);
+        */
+        this.rootStage.setMinHeight(450);
+        this.rootStage.setMinWidth(860);
+        this.showOverview();
     }
-    
-    public BorderPane getRootLayout() {
+
+    /** GETTERS AND SETTERS **/
+
+    public BorderPane getLayout() {
         return this.rootLayout;
     }
-    
-    public void setMainApp(Main mainApp) {
-        this.mainApp = mainApp;
+
+    public Stage getStage() {
+        return this.rootStage;
     }
-    
-    public Main getMainApp(){
-        return this.mainApp;
+
+    public Scene getScene() {
+        return this.rootScene;
     }
-    
-    public void setPrimaryStage(Stage pStage) {
-        this.primaryStage = pStage;
+
+    public void setVault(Vault vault) {
+        this.vault = vault;
     }
-    
-    public Stage getPrimaryStage() {
-        return this.primaryStage;
-    }
-    
-    public void setVault(Vault v) {
-        this.vault = v;
-    }
-    
+
     public Vault getVault() {
         return this.vault;
     }
-    
+
     public void setSelectedNote(Note note) {
         this.selectedNote = note;
     }
-    
+
     public Note getSelectedNote() {
         return this.selectedNote;
+    }
+
+    public Settings getSettings() {
+        return this.settings;
     }
 }

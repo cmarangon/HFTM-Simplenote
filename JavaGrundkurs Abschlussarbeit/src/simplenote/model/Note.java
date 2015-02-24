@@ -15,106 +15,119 @@ import java.util.List;
  *
  */
 public class Note implements Serializable {
-    
+
     /**
      * 
      */
     private static final long serialVersionUID = 4680988752581353062L;
-    private Date creation_date;
+    private Date creationDate;
+    private Date modificationDate;
     private String title;
     private String text;
     private ArrayList<File> pictureList;
     private ArrayList<URL> linkList;
-    private Integer owner_id;
-    private Integer[] shared_ids;
-    
+
     public Note() {
-        this("","");
+        this("", "");
     }
-    
+
     public Note(String title) {
         this(title, "");
     }
-    
+
     public Note(String title, String text) {
-        this.creation_date = new Date();
+        this.creationDate = new Date();
+        this.modificationDate = new Date();
         this.title = title;
         this.text = text;
         this.linkList = new ArrayList<URL>();
         this.pictureList = new ArrayList<File>();
     }
-    
-    
+
     @Override
     public String toString() {
         return this.title;
     }
-    
+
     /** GETTERS AND SETTERS **/
-    
+
     /**
-     * @return the creation_date
+     * @return the creationDate
      */
     public Date getCreationDate() {
-        return this.creation_date;
+        return this.creationDate;
     }
-    
+
     /**
-     * @param creation_date the creation_date to set
+     * @param creationDate the creationDate to set
      */
-    public void setCreationDate(Date creation_date) {
-        this.creation_date = creation_date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
-    
+
+    /**
+     * @return the modificationDate
+     */
+    public Date getModificationDate() {
+        return this.modificationDate;
+    }
+
+    /**
+     * @param modificationDate the modificationDate to set
+     */
+    public void setModificationDate(Date modificationDate) {
+        this.modificationDate = modificationDate;
+    }
+
     /**
      * @return the title
      */
     public String getTitle() {
         return this.title;
     }
-    
+
     /**
      * @param title the title to set
      */
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     /**
      * @return the text
      */
     public String getText() {
         return this.text;
     }
-    
+
     /**
      * @param text the text to set
      */
     public void setText(String text) {
         this.text = text;
     }
-    
+
     /**
      * @return the fileList
      */
     public List<File> getPictureList() {
         return this.pictureList;
     }
-    
+
     /**
      * @param pictureList
      */
     public void setPictureList(ArrayList<File> pictureList) {
         this.pictureList = pictureList;
     }
-    
+
     /**
-     * @return 
+     * @return the linkList
      */
     public ArrayList<URL> getLinkList() {
         return this.linkList;
     }
-    
+
     /**
      * @param linkList
      */

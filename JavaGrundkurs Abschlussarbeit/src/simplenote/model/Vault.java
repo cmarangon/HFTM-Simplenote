@@ -14,7 +14,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-
 /**
  * @author claudio
  *
@@ -23,16 +22,15 @@ public class Vault {
 
     private static final String FILENAME = "notizen.dat";
     private ArrayList<Note> notes;
-    private File vaultFile; 
-    
-    
+    private File vaultFile;
+
     /**
      * 
      */
     public Vault() {
         this.notes = new ArrayList<Note>();
         this.vaultFile = new File(FILENAME);
-        if(!this.vaultFile.exists()) {
+        if (!this.vaultFile.exists()) {
             try {
                 this.vaultFile.createNewFile();
             } catch (IOException e) {
@@ -46,7 +44,8 @@ public class Vault {
     public void read() {
         ObjectInputStream inputStream;
         try {
-            inputStream = new ObjectInputStream(new FileInputStream(this.vaultFile));
+            inputStream = new ObjectInputStream(new FileInputStream(
+                    this.vaultFile));
             Note note = null;
             while ((note = (Note) inputStream.readObject()) != null) {
                 this.add(note);
@@ -73,9 +72,10 @@ public class Vault {
     public boolean save() {
         ObjectOutputStream outputStream;
         try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(this.vaultFile));
-            for(Note note : this.notes) {
-                if(note != null) {
+            outputStream = new ObjectOutputStream(new FileOutputStream(
+                    this.vaultFile));
+            for (Note note : this.notes) {
+                if (note != null) {
                     outputStream.writeObject(note);
                 }
             }
@@ -92,10 +92,10 @@ public class Vault {
         }
         return true;
     }
-    
+
     public void delete(Note deleteNote) {
-        for(Note note : this.getNotes()) {
-            if(deleteNote.equals(note)) {
+        for (Note note : this.getNotes()) {
+            if (deleteNote.equals(note)) {
                 this.notes.remove(this.notes.indexOf(note));
                 this.save();
                 break;

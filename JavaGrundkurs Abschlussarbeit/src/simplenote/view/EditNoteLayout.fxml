@@ -5,20 +5,19 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplenote.control.EditNoteController">
+<AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField fx:id="titleField" layoutX="10.0" layoutY="15.0" promptText="Titel" />
-      <HTMLEditor fx:id="textField" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;false&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="10.0" layoutY="50.0" prefHeight="400.0" prefWidth="750.0" />
-      <ToggleButton fx:id="shareButton" layoutX="937.0" layoutY="15.0" mnemonicParsing="false" text="Teilen" />
-      <Button layoutX="681.0" layoutY="460.0" mnemonicParsing="false" onAction="#saveNote" text="Speichern" />
-      <Button layoutX="936.0" layoutY="300.0" mnemonicParsing="false" onAction="#addPicture" text="+ Bild" />
-      <Button layoutX="934.0" layoutY="426.0" mnemonicParsing="false" onAction="#addLink" text="+ Link" />
-      <ScrollPane hbarPolicy="NEVER" layoutX="770.0" layoutY="50.0" prefHeight="240.0" prefWidth="220.0">
+      <TextField fx:id="titleField" layoutX="10.0" layoutY="15.0" promptText="Titel" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0" />
+      <HTMLEditor fx:id="textField" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;false&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="10.0" layoutY="50.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="50.0" />
+      <Button layoutX="681.0" layoutY="460.0" mnemonicParsing="false" onAction="#saveNote" text="Speichern" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Button layoutX="934.0" layoutY="426.0" mnemonicParsing="false" onAction="#addLink" text="+ Link" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <ScrollPane fitToHeight="true" hbarPolicy="NEVER" layoutX="770.0" layoutY="50.0" minHeight="200.0" prefWidth="220.0" AnchorPane.bottomAnchor="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="50.0">
          <content>
-            <VBox fx:id="pictureList" prefHeight="233.0" prefWidth="220.0" />
+            <VBox fx:id="pictureList" fillWidth="false" prefWidth="200.0" styleClass="imageList" />
          </content>
       </ScrollPane>
-      <ListView fx:id="linkList" layoutX="770.0" layoutY="341.0" prefHeight="75.0" prefWidth="220.0" />
-      <TextField fx:id="linkField" layoutX="770.0" layoutY="426.0" prefHeight="26.0" prefWidth="157.0" text="http://" />
+      <ListView fx:id="linkList" layoutX="790.0" layoutY="340.0" prefHeight="120.0" prefWidth="220.0" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="10.0" />
+      <TextField fx:id="linkField" layoutX="770.0" layoutY="426.0" prefWidth="160.0" text="http://" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="70.0" />
+      <Button layoutX="846.0" layoutY="10.0" mnemonicParsing="false" onAction="#showOverview" text="Abbrechen" AnchorPane.rightAnchor="95.0" AnchorPane.topAnchor="10.0" />
    </children>
 </AnchorPane>

@@ -10,60 +10,72 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="485.0" prefWidth="1000.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="simplenote.control.NoteOverviewController">
+<AnchorPane BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ListView fx:id="noteList" layoutY="30.0" prefHeight="451.0" prefWidth="200.0" />
-      <WebView fx:id="textField" layoutX="200.0" layoutY="60.0" prefHeight="350.0" prefWidth="560.0" />
-      <Label fx:id="titleLabel" layoutX="210.0" layoutY="10.0">
+      <HBox alignment="CENTER" fillHeight="false" layoutX="5.0" layoutY="5.0" prefHeight="26.0" prefWidth="200.0" spacing="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <MenuButton fx:id="sortTypeLabel" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Sortierung">
+              <items>
+                  <RadioMenuItem fx:id="sortOnTitle" mnemonicParsing="false" selected="true" text="Titel">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="sortType" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem fx:id="sortOnCreationdate" mnemonicParsing="false" text="Erstelldatum" toggleGroup="$sortType" />
+                  <RadioMenuItem fx:id="sortOnModificationdate" mnemonicParsing="false" text="Änderungsdatum" toggleGroup="$sortType" />
+              </items>
+            </MenuButton>
+            <RadioButton fx:id="sortUpButton" layoutX="131.0" layoutY="6.0" mnemonicParsing="false" styleClass="sortingDirectionButton" text="↑">
+               <toggleGroup>
+                  <ToggleGroup fx:id="sortDirection" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="sortDownButton" layoutX="165.0" layoutY="6.0" mnemonicParsing="false" styleClass="sortingDirectionButton" text="↓" toggleGroup="$sortDirection" />
+         </children>
+      </HBox>
+      <ListView fx:id="noteList" layoutX="5.0" layoutY="67.0" prefWidth="200.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="70.0" />
+      <Label fx:id="statusLabel" layoutX="5.0" layoutY="464.0" text="Status: " AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+      <WebView fx:id="textField" layoutX="216.0" layoutY="34.0" maxHeight="-1.0" maxWidth="-1.0" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="70.0" />
+      <Label fx:id="titleLabel" layoutX="210.0" layoutY="10.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="5.0">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="dateLabel" layoutX="210.0" layoutY="40.0" styleClass="discreet" />
-      <Button fx:id="deleteButton" layoutX="908.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteNote" prefHeight="25.0" prefWidth="73.0" styleClass="button" text="Löschen">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <effect>
-            <Glow />
-         </effect>
-      </Button>
-      <Button fx:id="editButton" layoutX="828.0" layoutY="10.0" mnemonicParsing="false" onAction="#editNote" styleClass="button" text="Bearbeiten">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <effect>
-            <Glow />
-         </effect>
-      </Button>
-      <Label fx:id="statusLabel" layoutX="14.0" layoutY="466.0" prefHeight="5.0" prefWidth="178.0" text="Status: " />
-      <Button layoutX="732.0" layoutY="10.0" mnemonicParsing="false" onAction="#addNote" prefHeight="25.0" prefWidth="73.0" text="Neu">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-         <effect>
-            <Glow />
-         </effect>
-      </Button>
-      <TextField fx:id="searchField" layoutY="2.0" onKeyReleased="#change" prefHeight="26.0" prefWidth="120.0" promptText="Suchen" />
-      <RadioButton fx:id="sortingUpButton" layoutX="131.0" layoutY="6.0" mnemonicParsing="false" text="↑">
-         <font>
-            <Font size="12.0" />
-         </font>
-         <toggleGroup>
-            <ToggleGroup fx:id="sortingGroup" />
-         </toggleGroup>
-      </RadioButton>
-      <RadioButton fx:id="sortingDownButton" layoutX="165.0" layoutY="6.0" mnemonicParsing="false" text="↓" toggleGroup="$sortingGroup">
-         <font>
-            <Font size="12.0" />
-         </font>
-      </RadioButton>
-      <ScrollPane hbarPolicy="NEVER" layoutX="770.0" layoutY="60.0" prefHeight="440.0" prefWidth="220.0">
+      <Label fx:id="dateLabel" layoutX="210.0" layoutY="40.0" styleClass="discreet" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="260.0" AnchorPane.topAnchor="40.0" />
+      <HBox layoutX="732.0" layoutY="10.0" spacing="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <Button layoutX="732.0" layoutY="10.0" mnemonicParsing="false" onAction="#showAddNote" prefHeight="25.0" prefWidth="73.0" text="Neu">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <Glow />
+               </effect>
+            </Button>
+            <Button fx:id="editButton" layoutX="828.0" layoutY="10.0" mnemonicParsing="false" onAction="#showEditNote" styleClass="button" text="Bearbeiten">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <Glow />
+               </effect>
+            </Button>
+            <Button fx:id="deleteButton" layoutX="908.0" layoutY="10.0" mnemonicParsing="false" onAction="#deleteNote" prefHeight="25.0" prefWidth="73.0" styleClass="button" text="Löschen">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <Glow />
+               </effect>
+            </Button>
+         </children>
+      </HBox>
+      <ScrollPane fitToHeight="true" hbarPolicy="NEVER" layoutX="770.0" layoutY="60.0" prefWidth="220.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0">
          <content>
-            <VBox fx:id="pictureList" prefHeight="233.0" prefWidth="220.0" />
+            <VBox fx:id="pictureList" fillWidth="false" prefWidth="200.0" styleClass="imageList" />
          </content>
       </ScrollPane>
-      <ListView fx:id="linkList" layoutX="200.0" layoutY="410.0" prefHeight="90.0" prefWidth="560.0" />
+      <ListView fx:id="linkList" layoutX="200.0" layoutY="410.0" maxHeight="90.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="220.0" AnchorPane.rightAnchor="240.0" />
+      <TextField fx:id="searchField" layoutX="230.0" layoutY="65.0" prefHeight="26.0" prefWidth="200.0" promptText="Suchen" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
    </children>
 </AnchorPane>

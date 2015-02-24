@@ -5,9 +5,7 @@ package simplenote.control;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Comparator;
 
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -18,204 +16,237 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import simplenote.model.Note;
-
+import simplenote.model.Settings;
 
 /**
  * @author Claudio Marangon, Ljubisa Markovic
  *
  */
-public class NoteOverviewController {
+public class NoteOverviewController extends RootController {
 
     private RootController rc;
     private Note currentNote;
-    
-    
+
     @FXML
     private Label titleLabel;
-    
+
     @FXML
     private Label dateLabel;
-    
+
     @FXML
     private WebView textField;
-    
+
     @FXML
     private VBox pictureList;
-    
+
     @FXML
     private ListView<URL> linkList;
     private ObservableList<URL> linkData = FXCollections.observableArrayList();
-    
+
     @FXML
     private ListView<Note> noteList;
     private ObservableList<Note> noteData = FXCollections.observableArrayList();
-    
+
     @FXML
     private Button editButton;
-    
+
     @FXML
     private Button deleteButton;
-    
+
     @FXML
     private Label statusLabel;
-    private StringProperty statusText;
-    
+
     @FXML
     private TextField searchField;
+
+    @FXML
+    private ToggleGroup sortDirection;
+
+    @FXML
+    private RadioButton sortUpButton;
+
+    @FXML
+    private RadioButton sortDownButton;
+
+    @FXML
+    private ToggleGroup sortType;
+
+    @FXML
+    private MenuButton sortTypeLabel;
     
     @FXML
-    private RadioButton sortingUpButton;
-    
+    private RadioMenuItem sortOnTitle;
+
     @FXML
-    private RadioButton sortingDownButton;
-    
+    private RadioMenuItem sortOnCreationdate;
+
     @FXML
-    private ToggleGroup sortingGroup;
-    
-    
+    private RadioMenuItem sortOnModificationdate;
+
     /**
+     * Constructor
      * 
+     * Using a lazy singleton implementation
      */
     public NoteOverviewController() {
         this.rc = RootController.getInstance();
-        
-        for(Note note : this.rc.getVault().getNotes()) {
+
+        for (Note note : this.rc.getVault().getNotes()) {
             this.noteData.add(note);
         }
     }
-    
+
     @FXML
     public void initialize() {
+        // fill listview with data
         this.noteList.setItems(this.noteData);
-        
-        statusLabel.setText("Status: " + this.noteData.size() + " / " + this.noteData.size());
-        
-        
-        /* Notes overview */
-        noteList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Note>() {
 
-            @Override
-            public void changed(ObservableValue<? extends Note> observable, Note oldValue, Note newValue) {
-                
-                WebEngine we = textField.getEngine();
-                currentNote = newValue;
-                if(newValue != null) {
-                    
-                    titleLabel.setText(newValue.getTitle());
-                    dateLabel.setText("" + newValue.getCreationDate()); // TODO: pretty format the date
-                    
-                    // clear and rebuild link list
-                    linkData.clear();
-                    if(newValue.getLinkList() != null) {
-                        linkData.addAll(newValue.getLinkList());
-                    }
-                    linkList.setItems(linkData);
-                    
-                    // clear and rebuild picture list
-                    pictureList.getChildren().clear();
-                    if(newValue.getPictureList() != null) {
-                        ImageView iv;
-                        for(File img : newValue.getPictureList()) {
-                            iv = new ImageView();
-                            iv.setImage(new Image(img.toURI().toString()));
-                            iv.setFitHeight(200);
-                            iv.setFitWidth(200);
-                            iv.setPreserveRatio(true);
-                            iv.setSmooth(true);
-                            pictureList.getChildren().add(iv);
-                        }
-                    }
-                    
-                    // change content to noneditable mode
-                    String html = newValue.getText();
-                    if(html.contains("contenteditable=\"true\"")){
-                        html=html.replace("contenteditable=\"true\"", "contenteditable=\"false\"");
-                    }
-                    
-                    we.loadContent(html);
-                } else {
-                    titleLabel.setText("");
-                    dateLabel.setText("");
-                    we.loadContent("<em>keine Notizen vorhanden</em>");
+        // initialize the statustext
+        updateStatus();
+
+        // handle the functionality when another note gets selected
+        noteList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+
+            currentNote = newValue;
+            WebEngine we = textField.getEngine();
+            
+            // save selected item in persistent settings
+            rc.getSettings().setSelectedElementIndex(noteList.getSelectionModel().getSelectedIndex());
+            
+            // load values of selected item into view
+            if (currentNote != null) {
+
+                titleLabel.setText(currentNote.getTitle());
+                dateLabel.setText(ViewHelper.formatDate(currentNote.getCreationDate()));
+                // clear and rebuild link list
+                linkData.clear();
+                if (currentNote.getLinkList() != null) {
+                    linkData.addAll(currentNote.getLinkList());
                 }
+                linkList.setItems(linkData);
+
+                // clear and rebuild picture list
+                pictureList.getChildren().clear();
+                if (currentNote.getPictureList() != null) {
+                    for (File file : currentNote.getPictureList()) {
+                        pictureList.getChildren().add(ViewHelper.createImageView(file));
+                    }
+                }
+                
+                we.loadContent(ViewHelper.makeContentUnwritable(currentNote.getText()));
+            } else {
+                titleLabel.setText("");
+                dateLabel.setText("");
+                we.loadContent("<em>keine Notizen vorhanden</em>");
             }
         });
-        
-        /* Notes overview search field */
+
+        // handle search
         FilteredList<Note> filteredData = new FilteredList<>(this.noteData, p -> true);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(note -> {
-                // If filter text is empty, display all persons.
+                rc.getSettings().setSearchText(newValue);
+
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
-                // Compare first name and last name of every person with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (note.getTitle().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-                    return true; // Filter matches first name.
+                    return true;
                 } else if (note.getText().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-                    return true; // Filter matches last name.
+                    return true;
                 }
-                return false; // Does not match.
+                return false;
             });
-            
-            statusLabel.setText("Status: " + filteredData.size() + " / " + this.noteData.size());
+
+            // update status
+            updateStatus();
         });
-        
+
         SortedList<Note> sortedData = new SortedList<>(filteredData);
-        
-        
-        
-        /* Notes overview sorting */
-        sortingGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue.equals(sortingDownButton)) {
-                sortedData.setComparator((Note n1, Note n2) -> n1.getTitle().toLowerCase().compareTo(n2.getTitle().toLowerCase()) * -1);
-            } else if(newValue.equals(sortingUpButton)) {
-                sortedData.setComparator((Note n1, Note n2) -> n1.getTitle().toLowerCase().compareTo(n2.getTitle().toLowerCase()));
+
+        // handle sorting
+        ChangeListener<Toggle> sortToggleListener = new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                if (sortDirection.getSelectedToggle() != null && sortType.getSelectedToggle() != null) {
+                    
+                    if (sortDirection.getSelectedToggle().equals(sortDownButton)) {
+                        rc.getSettings().setSortDirection(ViewHelper.DESC);
+                    } else {
+                        rc.getSettings().setSortDirection(ViewHelper.ASC);
+                    }
+                    
+                    Toggle selectedToggle = sortType.getSelectedToggle(); 
+                    if (selectedToggle.equals(sortOnCreationdate)) {
+                        sortTypeLabel.setText(sortOnCreationdate.getText());
+                        sortedData.setComparator((Note n1, Note n2) -> n1.getCreationDate().compareTo(n2.getCreationDate()) * rc.getSettings().getSortDirection());
+                    } else if (selectedToggle.equals(sortOnModificationdate)) {
+                        sortTypeLabel.setText(sortOnModificationdate.getText());
+                        sortedData.setComparator((Note n1, Note n2) -> n1.getModificationDate().compareTo(n2.getModificationDate()) * rc.getSettings().getSortDirection());
+                    } else {
+                        sortTypeLabel.setText(sortOnTitle.getText());
+                        sortedData.setComparator((Note n1, Note n2) -> n1.getTitle().toLowerCase().compareTo(n2.getTitle().toLowerCase()) * rc.getSettings().getSortDirection());
+                    }
+                }
             }
-        });
-        
+        };
+        sortDirection.selectedToggleProperty().addListener(sortToggleListener);
+        sortType.selectedToggleProperty().addListener(sortToggleListener);
+
+        // load sorted and filtered data into list
         noteList.setItems(sortedData);
+
+        // save settings persisten for future use
+        Settings settings = new Settings();
+        this.searchField.setText(settings.getSearchText());
+        if (settings.getSortDirection() == ViewHelper.ASC) {
+            this.sortUpButton.setSelected(true);
+        } else {
+            this.sortDownButton.setSelected(true);
+        }
+        noteList.getSelectionModel().select(settings.getSelectedElementIndex());
     }
-    
+
     @FXML
-    public void addNote() {
-      this.rc.showAddNote();
+    public void showAddNote() {
+        this.rc.showAddNote();
     }
-    
+
     @FXML
-    public void editNote() {
-        this.rc.setSelectedNote(this.noteList.getSelectionModel().getSelectedItem());
-        this.rc.showEditNote();
+    public void showEditNote() {
+        this.rc.showEditNote(this.noteList.getSelectionModel().getSelectedItem());
     }
-    
+
     @FXML
     public void deleteNote() {
         // check if something is selected and selected note is in data
-        if(this.currentNote != null && this.noteData.contains(this.currentNote)) {
-            
+        if (this.currentNote != null && this.noteData.contains(this.currentNote)) {
+
             // remove from storage
             this.rc.getVault().delete(this.currentNote);
-            
+
             // remove from list
             this.noteData.remove(this.currentNote);
+            
+            // update status
+            updateStatus();
         }
     }
     
-    @FXML
-    public void change() {
-        //System.out.println(this.searchText.getText());
-        //this.noteData.f
+    private void updateStatus() {
+        this.statusLabel.setText("Status: " + this.noteList.getItems().size() + " / " + this.noteData.size());
     }
 }

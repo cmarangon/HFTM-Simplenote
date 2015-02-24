@@ -10,7 +10,6 @@
     -fx-text-fill:#a8a8a8;
 }
 .error {
-    -fx-focus-color:#ff0000;
     -fx-border-color:#ff0000;
 }
 
@@ -20,4 +19,14 @@
 }
 .button:hover {
     -fx-opacity:1;
+}
+
+.sortingDirectionButton,
+.sortingDirectionButton:hover {
+    -fx-font-size:12px;
+}
+
+/* IMAGES */
+.imageList {
+    -fx-spacing:5px;
 }
