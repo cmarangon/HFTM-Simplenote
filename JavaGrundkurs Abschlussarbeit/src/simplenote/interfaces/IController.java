@@ -7,6 +7,6 @@ package simplenote.interfaces;
  * @author claudio
  *
  */
-public interface IFXController {
+public interface IController {
 
 }

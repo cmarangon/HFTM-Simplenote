@@ -4,25 +4,23 @@
 package simplenote.control;
 
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import simplenote.interfaces.IFXController;
+import simplenote.interfaces.IController;
 import simplenote.model.Note;
-import simplenote.model.Settings;
 import simplenote.model.Vault;
 
 /**
  * @author Claudio Marangon, Ljubisa Markovic
  *
  */
-public class RootController implements IFXController {
+public class RootController extends FXController {
     // singleton
     private static RootController instance = null;
 
@@ -34,7 +32,7 @@ public class RootController implements IFXController {
 
     private Note selectedNote;
 
-    private Settings settings;
+    private Preferences preferences;
 
     public RootController() {
     }
@@ -51,7 +49,7 @@ public class RootController implements IFXController {
 
     @FXML
     private void initialize() {
-        this.settings = new Settings();
+        // here, I would initialize things... IF I HAD ANY!!
     }
 
     protected void showOverview() {
@@ -83,7 +81,7 @@ public class RootController implements IFXController {
         loadLayout("../view/EditNoteLayout.fxml", new EditNoteController());
     }
 
-    private void loadLayout(String layoutFile, IFXController controller) {
+    private void loadLayout(String layoutFile, IController controller) {
         try {
             // Load person overview.
             FXMLLoader loader = new FXMLLoader();
@@ -97,38 +95,14 @@ public class RootController implements IFXController {
         }
     }
 
-    public void init(Stage rootStage, Scene rootScene, BorderPane rootLayout) {
-        
+    public void init(Stage rootStage, Scene rootScene, BorderPane rootLayout, Preferences pref) {
+
         this.rootStage = rootStage;
         this.rootScene = rootScene;
         this.rootLayout = rootLayout;
 
-        this.rootStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent ev) {
-                settings.setHeight(rootStage.getHeight());
-                settings.setWidth(rootStage.getWidth());
-                settings.setPosX(rootStage.getX());
-                settings.setPosY(rootStage.getY());
+        this.preferences = pref;
 
-                settings.save();
-            }
-        });
-        /*
-        ChangeListener<Number> resizeListener = new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
-                if(rootStage.widthProperty() != null && rootStage.heightProperty() != null) {
-                    System.out.println("Height: " + rootStage.heightProperty().get());
-                    System.out.println("Width: " + rootStage.widthProperty().get());
-                    System.out.println("-----------------");
-                }
-            }
-        };
-        this.rootStage.widthProperty().addListener(resizeListener);
-        this.rootStage.heightProperty().addListener(resizeListener);
-        */
         this.rootStage.setMinHeight(450);
         this.rootStage.setMinWidth(860);
         this.showOverview();
@@ -164,7 +138,7 @@ public class RootController implements IFXController {
         return this.selectedNote;
     }
 
-    public Settings getSettings() {
-        return this.settings;
+    public Preferences getPreferences() {
+        return this.preferences;
     }
 }

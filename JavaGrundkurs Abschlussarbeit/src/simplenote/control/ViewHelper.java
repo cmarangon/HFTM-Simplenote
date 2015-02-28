@@ -15,36 +15,55 @@ public class ViewHelper {
     public static int SORT_TITLE = 1;
     public static int SORT_CREATION_DATE = 2;
     public static int SORT_MODIFICATION_DATE = 3;
-    
+
     /**
      * Formats the given date into an predefined string
      * 
      * @param date
-     * @return
+     * @param prefix
+     * @param text
+     * @return a formatted date
      */
-    public static String formatDate(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("'Erstellt am 'dd.MM.yyyy' um 'HH:mm:ss");
-        return dateFormat.format(date);
+    public static String formatDate(Date date, String prefix, String text) {
+        if (date != null) {
+            String defaultPrefix = "Erstellt am ";
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy' um 'HH:mm:ss");
+            if (prefix == null || prefix.equals("")) {
+                prefix = defaultPrefix;
+            }
+            text = dateFormat.format(date);
+        }
+        return prefix + text;
     }
-    
-    
+
+    /**
+     * Formats the given date into an predefined string
+     * 
+     * @param date
+     * @param prefix
+     * @return a formatted date
+     */
+    public static String formatDate(Date date, String prefix) {
+        return formatDate(date, prefix, "");
+    }
+
     /**
      * Sets the content of a note to uneditable
      * 
      * @param content
-     * @return
+     * @return an uneditable string representation for webview
      */
     public static String makeContentUnwritable(String content) {
         String contentWritable = "contenteditable=\"true\"";
         String contentUnwritable = "contenteditable=\"false\"";
-        
+
         // change content to noneditable mode
         if (content.contains(contentWritable)) {
             content = content.replace(contentWritable, contentUnwritable);
         }
         return content;
     }
-    
+
     /**
      * Creates standard ImageView from file
      * 

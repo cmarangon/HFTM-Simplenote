@@ -37,7 +37,7 @@ public class Note implements Serializable {
 
     public Note(String title, String text) {
         this.creationDate = new Date();
-        this.modificationDate = new Date();
+        this.modificationDate = null;
         this.title = title;
         this.text = text;
         this.linkList = new ArrayList<URL>();

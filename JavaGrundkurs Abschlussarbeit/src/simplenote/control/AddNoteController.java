@@ -4,22 +4,22 @@
 package simplenote.control;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
@@ -29,37 +29,42 @@ import simplenote.model.Note;
  * @author Claudio Marangon, Ljubisa Markovic
  *
  */
-public class AddNoteController extends RootController {
-
-    private final String HTML_EMPTY = "<html dir=\"ltr\"><head></head><body contenteditable=\"true\"></body></html>";
-    private final String DEFAULT_URL = "http://";
+public class AddNoteController extends FXNoteController {
 
     private RootController rc;
     private Note newNote;
-    
-    
+
+    @FXML
+    private Button saveButton;
+
+    @FXML
+    private Button backButton;
+
     @FXML
     private TextField titleField;
-    
+
     @FXML
     private HTMLEditor textField;
-    
+
     @FXML
     private ToggleButton shareButton;
-    
+
     @FXML
     private VBox pictureList;
-    private ArrayList<File> pictureData = new ArrayList<File>();
-    
+
     @FXML
     private TextField linkField;
-    
+
     @FXML
     private ListView<URL> linkList;
-    private ObservableList<URL> linkData = FXCollections.observableArrayList();
-    
-    
-    
+
+    @FXML
+    private Button addLink;
+
+    @FXML
+    private HBox modifyLink;
+
+
     /**
      * 
      */
@@ -67,13 +72,20 @@ public class AddNoteController extends RootController {
         this.rc = RootController.getInstance();
     }
 
-    
     @FXML
     public void initialize() {
+        // update buttons
+        super.initButtons(saveButton, backButton);
+
+        modifyLink.getStyleClass().add(CSS_HIDDEN);
+        modifyLink.setMouseTransparent(true);
+
         this.newNote = new Note();
         this.linkList.setItems(linkData);
-        
-        
+        addContextMenuToLinkList(linkList, linkField, addLink, modifyLink);
+
+        pictureList.setAlignment(Pos.TOP_RIGHT);
+
         // drag & drop for images 
         pictureList.setOnDragOver(new EventHandler<DragEvent>(){
             @Override
@@ -86,7 +98,6 @@ public class AddNoteController extends RootController {
                 }
             }
         });
-        
         pictureList.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
@@ -94,17 +105,15 @@ public class AddNoteController extends RootController {
                 boolean success = false;
                 if (db.hasFiles()) {
                     success = true;
-                    for (File file:db.getFiles()) {
-                        addPictureToList(file);
+                    for (File file : db.getFiles()) {
+                        addPictureToList(pictureList, file);
                     }
                 }
                 event.setDropCompleted(success);
                 event.consume();
             }
         });
-        
-        
-        
+
         // drag & drop for links
         linkList.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
@@ -132,7 +141,8 @@ public class AddNoteController extends RootController {
         });
         
     }
-    
+
+
     /* FXML Actions */
 
     @FXML
@@ -146,11 +156,11 @@ public class AddNoteController extends RootController {
         if(! this.textField.getHtmlText().equals(HTML_EMPTY)) {
             String nTitle = this.titleField.getText();
             String nText = this.textField.getHtmlText();
-            
+
             if(nTitle.isEmpty()) {
-                nTitle = ViewHelper.formatDate(new Date());
+                nTitle = ViewHelper.formatDate(new Date(), null);
             }
-            
+
             this.newNote.setTitle(nTitle);
             this.newNote.setText(nText);
             this.newNote.setPictureList(this.pictureData);
@@ -159,60 +169,38 @@ public class AddNoteController extends RootController {
                 al.add(url);
             }
             this.newNote.setLinkList(al); 
-            
-            
+
             this.rc.getVault().add(newNote);
             if(this.rc.getVault().save()){
                 this.rc.showOverview();
             } else {
-                System.out.println("ERROR ON SAVING NOTE");
             }
         } else {
-            this.textField.getStyleClass().add("error");
+            this.textField.getStyleClass().add(CSS_ERROR);
         }
     }
-    
+
     @FXML
     public void addLink() {
-        if(this.linkField.getText().startsWith(DEFAULT_URL) && 
-           this.linkField.getText().length() > DEFAULT_URL.length()) {
-            
-            if (this.addLinkToList(this.linkField.getText())) {
-                // success
-                this.linkField.getStyleClass().remove("error");
-                this.linkField.setText(DEFAULT_URL);
-            } else {
-                this.linkField.getStyleClass().add("error");
-            }
+        if (this.addLinkToList(this.linkField.getText())) {
+            // success
+            this.linkField.getStyleClass().remove(CSS_ERROR);
+            this.linkField.setText(DEFAULT_URL);
+        } else {
+            // error
+            this.linkField.getStyleClass().add(CSS_ERROR);
         }
     }
-    
-    private boolean addLinkToList(String string_url) {
-        boolean error = true;
-        
-        try {
-            this.linkData.add(new URL(string_url));
-            error = false;
-        } catch (MalformedURLException e) {
-        }
-        
-        return error;
-    }
-    
+
     @FXML
-    public void addPicture() {
+    public void saveLink() {
+        
+    }
+
+    @FXML
+    public void choosePicture() {
         FileChooser fileChooser = new FileChooser();
         List<File> pList = fileChooser.showOpenMultipleDialog(this.rc.getStage());
-        
-        if (pList != null) {
-            for(File f : pList) {
-                this.addPictureToList(f);
-            }
-        }
-    }
-    
-    private void addPictureToList(File file) {
-        this.pictureData.add(file);
-        this.pictureList.getChildren().add(ViewHelper.createImageView(file));
+        addPictures(this.pictureList, pList);
     }
 }

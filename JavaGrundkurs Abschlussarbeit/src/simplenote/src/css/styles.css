@@ -12,13 +12,11 @@
 .error {
     -fx-border-color:#ff0000;
 }
-
-/* BUTTONS */
-.button {
-    -fx-opacity:0.5;
+.hidden {
+    -fx-opacity:0;
 }
-.button:hover {
-    -fx-opacity:1;
+.clickable {
+    -fx-cursor:hand;
 }
 
 .sortingDirectionButton,
@@ -29,4 +27,17 @@
 /* IMAGES */
 .imageList {
     -fx-spacing:5px;
+}
+
+.blurBG {
+    -fx-background-color:rgba(0,0,0,0.5);
+}
+
+/* OTHERS */
+.borderless {
+    -fx-border-width:0;
+    -fx-background-color:transparent;
+}
+.backgroundless {
+    -fx-background-color:transparent;
 }
