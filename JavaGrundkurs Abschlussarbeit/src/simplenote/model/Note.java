@@ -1,5 +1,7 @@
 /**
- * 
+ * simpleNote, a better way to store your notes
+ * Abschlussarbeit der HFTM Grenchen
+ * Klasse Java Grundlagen II
  */
 package simplenote.model;
 
@@ -11,8 +13,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * Model for a note.
+ * Stores all the necessary information.
+ * 
  * @author Claudio Marangon, Ljubisa Markovic
- *
  */
 public class Note implements Serializable {
 
@@ -27,14 +31,28 @@ public class Note implements Serializable {
     private ArrayList<File> pictureList;
     private ArrayList<URL> linkList;
 
+    /**
+     * Constructor
+     */
     public Note() {
         this("", "");
     }
 
+    /**
+     * Constructor
+     * 
+     * @param title
+     */
     public Note(String title) {
         this(title, "");
     }
 
+    /**
+     * Constructor
+     * 
+     * @param title
+     * @param text
+     */
     public Note(String title, String text) {
         this.creationDate = new Date();
         this.modificationDate = null;
@@ -44,6 +62,9 @@ public class Note implements Serializable {
         this.pictureList = new ArrayList<File>();
     }
 
+    /**
+     * Converts the note into a string representation
+     */
     @Override
     public String toString() {
         return this.getTitle();
@@ -52,69 +73,89 @@ public class Note implements Serializable {
     /** GETTERS AND SETTERS **/
 
     /**
-     * @return the creationDate
+     * Returns the creation date
+     * 
+     * @return creationdate as Date
      */
     public Date getCreationDate() {
         return this.creationDate;
     }
 
     /**
-     * @param creationDate the creationDate to set
+     * Sets the creation date
+     * 
+     * @param creationDate
      */
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
     /**
-     * @return the modificationDate
+     * Returns the modification date
+     * 
+     * @return modificationDate as Date
      */
     public Date getModificationDate() {
         return this.modificationDate;
     }
 
     /**
-     * @param modificationDate the modificationDate to set
+     * Sets the modification date
+     * 
+     * @param modificationDate
      */
     public void setModificationDate(Date modificationDate) {
         this.modificationDate = modificationDate;
     }
 
     /**
-     * @return the title
+     * Returns the title
+     * 
+     * @return title as String
      */
     public String getTitle() {
         return this.title;
     }
 
     /**
-     * @param title the title to set
+     * Sets the title
+     * 
+     * @param title
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     * @return the text
+     * Returns the text
+     * 
+     * @return text as String
      */
     public String getText() {
         return this.text;
     }
 
     /**
-     * @param text the text to set
+     * Sets the text
+     * 
+     * @param text
      */
     public void setText(String text) {
         this.text = text;
     }
 
     /**
-     * @return the fileList
+     * Returns the list of pictures
+     * 
+     * @return fileList as List<File>
      */
     public List<File> getPictureList() {
         return this.pictureList;
     }
 
     /**
+     * Sets the list of pictures
+     * 
      * @param pictureList
      */
     public void setPictureList(ArrayList<File> pictureList) {
@@ -122,13 +163,17 @@ public class Note implements Serializable {
     }
 
     /**
-     * @return the linkList
+     * Returns the list of links
+     * 
+     * @return linkList as ArrayList<URL>
      */
     public ArrayList<URL> getLinkList() {
         return this.linkList;
     }
 
     /**
+     * Sets the list of links
+     * 
      * @param linkList
      */
     public void setLinkList(ArrayList<URL> linkList) {

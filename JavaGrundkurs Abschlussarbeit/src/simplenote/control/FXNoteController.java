@@ -1,5 +1,7 @@
 /**
- * 
+ * simpleNote, a better way to store your notes
+ * Abschlussarbeit der HFTM Grenchen
+ * Klasse Java Grundlagen II
  */
 package simplenote.control;
 
@@ -34,8 +36,10 @@ import javax.activation.MimetypesFileTypeMap;
 import simplenote.model.Note;
 
 /**
+ * Controller class, responsible for note creation or editing.
+ * Provides methods used by the AddNoteController and EditNoteController
+ * 
  * @author Claudio Marangon, Ljubisa Markovic
- *
  */
 public class FXNoteController extends FXController {
 
@@ -57,10 +61,20 @@ public class FXNoteController extends FXController {
     protected Button cancelButton;
 
 
+    /**
+     * Constructor
+     */
     public FXNoteController() {
         rc = RootController.getInstance();
     }
 
+    /**
+     * Initialize the save and back buttons.
+     * Sets the icon, removes the text and adds a meaningful tooltip.
+     * 
+     * @param saveButton
+     * @param backButton
+     */
     protected void initEditButtons(Button saveButton, Button backButton) {
         this.saveButton = saveButton;
         this.saveButton.setGraphic(new ImageView(SAVE_ICON));
@@ -76,6 +90,15 @@ public class FXNoteController extends FXController {
         });
     }
 
+    /**
+     * Initialize all the fields which are responsible for the note.
+     * Enables drag&drop.
+     * 
+     * @param titleField
+     * @param textField
+     * @param pictureList
+     * @param linkList
+     */
     protected void initNoteFields(TextField titleField, HTMLEditor textField, VBox pictureList, ListView<URL> linkList) {
         this.titleField = titleField;
 
@@ -89,6 +112,16 @@ public class FXNoteController extends FXController {
         initDragAndDrop();
     }
 
+    /**
+     * Initalize all the elements required to add and modify links.
+     * Sets the icon, removes the text and adds a meaningful tooltip.
+     * 
+     * @param linkField
+     * @param modifyLinkList
+     * @param addLinkButton
+     * @param acceptButton
+     * @param cancelButton
+     */
     protected void initLinkElements(TextField linkField, HBox modifyLinkList, Button addLinkButton, Button acceptButton, Button cancelButton) {
         this.linkField = linkField;
 
@@ -112,6 +145,9 @@ public class FXNoteController extends FXController {
         initLinkCustomActions();
     }
 
+    /**
+     * Adds a contextmenu to the link list
+     */
     private void addContextMenuOnLinkList() {
         // Context menu for links
         ContextMenu contextMenu = new ContextMenu();
@@ -133,6 +169,9 @@ public class FXNoteController extends FXController {
         linkList.setContextMenu(contextMenu);
     }
 
+    /**
+     * Adds the link from the link text field to the note
+     */
     protected void addLink() {
         if (addLinkToList(linkField.getText())) {
             linkField.getStyleClass().remove(CSS_ERROR);
@@ -143,10 +182,23 @@ public class FXNoteController extends FXController {
         }
     }
 
+    /**
+     * Tries to add a new link
+     * 
+     * @param string_url
+     * @return succes status as boolean
+     */
     private boolean addLinkToList(String string_url) {
         return addLinkToList(string_url, -1);
     }
 
+    /**
+     * Tries to update a link at a given index of the link list
+     * 
+     * @param string_url
+     * @param index
+     * @return success status as boolean
+     */
     private boolean addLinkToList(String string_url, int index) {
         boolean success = true;
 
@@ -164,6 +216,9 @@ public class FXNoteController extends FXController {
         return success;
     }
 
+    /**
+     * Initialize custom actions such as accept or cancel link modification
+     */
     private void initLinkCustomActions() {
         addLinkButton.setOnAction((event) -> {
             addLink();
@@ -190,6 +245,9 @@ public class FXNoteController extends FXController {
         });
     }
 
+    /**
+     * Activates the link modification elements
+     */
     private void activateModifyLink() {
         // hide normal save button
         addLinkButton.getStyleClass().add(CSS_HIDDEN);
@@ -200,6 +258,9 @@ public class FXNoteController extends FXController {
         modifyLinkList.setMouseTransparent(false);
     }
 
+    /**
+     * Deactivates the link modification elements
+     */
     private void deactivateModifyLink() {
         // hide new save and cancel buttons
         modifyLinkList.getStyleClass().add(CSS_HIDDEN);
@@ -210,6 +271,9 @@ public class FXNoteController extends FXController {
         addLinkButton.setMouseTransparent(false);
     }
 
+    /**
+     * Loads the picture list on the basis of the picture data
+     */
     protected void loadPictureList() {
         // first of all, clear the list 
         pictureList.getChildren().clear();
@@ -236,8 +300,7 @@ public class FXNoteController extends FXController {
             removeIcon.getStyleClass().add(CSS_CLICKABLE);
             removeIcon.setPickOnBounds(true);
             removeIcon.setOnMouseClicked((event) -> {
-                removePicture(pictureList, pictureData.indexOf(file));
-                loadPictureList();
+                removePicture(pictureData.indexOf(file));
             });
             if (pictureData.size() > 1) {
                 if (pictureData.indexOf(file) > 0)  {
@@ -280,36 +343,58 @@ public class FXNoteController extends FXController {
         }
     }
 
+    /**
+     * Shows a file chooser dialog and adds the choosen images to the note
+     */
     protected void choosePicture() {
         FileChooser fileChooser = new FileChooser();
         List<File> pList = fileChooser.showOpenMultipleDialog(rc.getStage());
-        addPictures(pictureList, pList);
+        addPictures(pList);
     }
 
-    private void addPictures(VBox pictureList, List<File> pList) {
+    /**
+     * Takes a list of files and adds the pictures of this list to the note
+     * 
+     * @param pList
+     */
+    private void addPictures(List<File> pList) {
         if (pList != null) {
             for(File f : pList) {
                 String mimetype= new MimetypesFileTypeMap().getContentType(f);
                 String type = mimetype.split("/")[0];
                 if(type.equals("image")) {
-                    addPictureToList(pictureList, f);
+                    addPictureToList(f);
                 }
             }
         }
     }
 
-    private void addPictureToList(VBox pictureList, File file) {
+    /**
+     * Adds the given file to the note and updates the picture list
+     *
+     * @param file
+     */
+    private void addPictureToList(File file) {
         pictureData.add(file);
         loadPictureList();
     }
 
-    private void removePicture(VBox pictureList, int index) {
+    /**
+     * Removes a picture from the note and updates the picture list 
+     * 
+     * @param index
+     */
+    private void removePicture(int index) {
         if (index > -1) {
             pictureList.getChildren().remove(index);
             pictureData.remove(index);
+            loadPictureList();
         }
     }
-    
+
+    /**
+     * Enables drag&drop on the picture list and link list
+     */
     private void initDragAndDrop() {
         // drag & drop for images 
         pictureList.setOnDragOver((event) -> {
@@ -326,13 +411,13 @@ public class FXNoteController extends FXController {
             if (db.hasFiles()) {
                 success = true;
                 for (File file : db.getFiles()) {
-                    addPictureToList(pictureList, file);
+                    addPictureToList(file);
                 }
             }
             event.setDropCompleted(success);
             event.consume();
         });
-    
+
         // drag & drop for links
         linkList.setOnDragOver((event) -> {
             Dragboard db = event.getDragboard();
@@ -354,6 +439,12 @@ public class FXNoteController extends FXController {
         });
     }
 
+    /**
+     * Saves the given note to the vault. If isNew flag is set, adds the note as a new note.
+     * 
+     * @param note
+     * @param isNew
+     */
     protected void saveNote(Note note, boolean isNew) {
         // text is required
         if (! textField.getHtmlText().equals(HTML_EMPTY)) {
@@ -385,7 +476,6 @@ public class FXNoteController extends FXController {
             }
             if(rc.getVault().save()){
                 rc.showOverview();
-            } else {
             }
         } else {
             textField.getStyleClass().add(CSS_ERROR);

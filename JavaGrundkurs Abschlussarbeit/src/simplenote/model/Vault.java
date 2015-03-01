@@ -1,6 +1,7 @@
 /**
- * @author Claudio Marangon, Ljubisa Markovic
- * 
+ * simpleNote, a better way to store your notes
+ * Abschlussarbeit der HFTM Grenchen
+ * Klasse Java Grundlagen II
  */
 package simplenote.model;
 
@@ -15,8 +16,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 /**
- * @author claudio
- *
+ * Model for the vault.
+ * He stores all the notes, loads and saves them when needed.
+ * 
+ * @author Claudio Marangon, Ljubisa Markovic
  */
 public class Vault {
 
@@ -25,7 +28,7 @@ public class Vault {
     private File vaultFile;
 
     /**
-     * 
+     * Constructor
      */
     public Vault() {
         this.notes = new ArrayList<Note>();
@@ -41,6 +44,9 @@ public class Vault {
         this.read();
     }
 
+    /**
+     * Reads the storage file
+     */
     public void read() {
         ObjectInputStream inputStream;
         try {
@@ -65,10 +71,20 @@ public class Vault {
         }
     }
 
+    /**
+     * Adds a new note to the vault
+     * 
+     * @param note
+     */
     public void add(Note note) {
         this.notes.add(note);
     }
 
+    /**
+     * Saves the vault and all it's notes to the storage file
+     * 
+     * @return
+     */
     public boolean save() {
         ObjectOutputStream outputStream;
         try {
@@ -93,6 +109,11 @@ public class Vault {
         return true;
     }
 
+    /**
+     * Deletes a given note
+     * 
+     * @param deleteNote
+     */
     public void delete(Note deleteNote) {
         for (Note note : this.getNotes()) {
             if (deleteNote.equals(note)) {
@@ -103,6 +124,11 @@ public class Vault {
         }
     }
 
+    /**
+     * Returns a list of all the notes
+     * 
+     * @return all notes as ArrayList<Note>
+     */
     public ArrayList<Note> getNotes() {
         return this.notes;
     }

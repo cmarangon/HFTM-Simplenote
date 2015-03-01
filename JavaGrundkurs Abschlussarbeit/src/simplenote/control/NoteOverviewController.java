@@ -1,5 +1,7 @@
 /**
- * 
+ * simpleNote, a better way to store your notes
+ * Abschlussarbeit der HFTM Grenchen
+ * Klasse Java Grundlagen II
  */
 package simplenote.control;
 
@@ -43,8 +45,9 @@ import javafx.scene.web.WebView;
 import simplenote.model.Note;
 
 /**
+ * Controller class for note overview
+ * 
  * @author Claudio Marangon, Ljubisa Markovic
- *
  */
 public class NoteOverviewController extends FXController {
 
@@ -126,6 +129,9 @@ public class NoteOverviewController extends FXController {
         }
     }
 
+    /**
+     * Gets called when loaded with FXMLLoader
+     */
     @FXML
     public void initialize() {
         
@@ -361,16 +367,25 @@ public class NoteOverviewController extends FXController {
         sortType.selectToggle(_sortType);
     }
 
+    /**
+     * Shows the add note layout
+     */
     @FXML
     public void showAddNote() {
         rc.showAddNote();
     }
 
+    /**
+     * Shows the edit note layout
+     */
     @FXML
     public void showEditNote() {
-        rc.showEditNote(noteList.getSelectionModel().getSelectedItem());
+        rc.showEditNote();
     }
 
+    /**
+     * Deletes the currently selected note
+     */
     @FXML
     public void deleteNote() {
         // check if something is selected and selected note is in data
@@ -394,7 +409,11 @@ public class NoteOverviewController extends FXController {
             }
         }
     }
-    
+
+    /**
+     * Updates the status label. Shows how many notes are currently displayed and
+     * how many notes are available in total.
+     */
     private void updateStatus() {
         statusLabel.setText("Status: " + noteList.getItems().size() + " / " + noteData.size());
     }

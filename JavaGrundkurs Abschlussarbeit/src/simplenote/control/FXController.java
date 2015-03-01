@@ -1,9 +1,19 @@
+/**
+ * simpleNote, a better way to store your notes
+ * Abschlussarbeit der HFTM Grenchen
+ * Klasse Java Grundlagen II
+ */
 package simplenote.control;
 
 import javafx.scene.image.Image;
 import simplenote.Main;
 import simplenote.interfaces.IController;
-
+/**
+ * Controller class. Acts as father of all used controllers.
+ * Implements the IController interface. 
+ * 
+ * @author Claudio Marangon, Ljubisa Markovic
+ */
 public class FXController implements IController {
     private static final String MOVE_UP = "src/img/arrow-drop-up.png";
     private static final String MOVE_DOWN = "src/img/arrow-drop-down.png";
@@ -43,6 +53,9 @@ public class FXController implements IController {
     public static final String PREF_SEARCH_TEXT = "search.text";
     public static final String PREF_SELECTED_NOTE = "notes.selectedNote";
 
+    /**
+     * Constructor
+     */
     public FXController() {
      // luke, im your father
     }

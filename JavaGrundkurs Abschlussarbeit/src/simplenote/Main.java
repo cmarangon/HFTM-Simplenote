@@ -33,9 +33,10 @@ import simplenote.interfaces.InitCompletionHandler;
 import simplenote.model.Vault;
 
 /**
+ * Main class
+ * Responsible to start the whole javafx application
  * 
  * @author Claudio Marangon, Ljubisa Markovic
- *
  */
 public class Main extends Application {
     private static final String APP_NAME = "simpleNote";
@@ -173,8 +174,7 @@ public class Main extends Application {
     }
 
     /**
-     * Show main stage
-     * 
+     * Shows the main stage
      */
     private void showMainStage() {
         try {
@@ -211,7 +211,10 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
-    
+
+    /**
+     * The deconstructor as you will
+     */
     @Override
     public void stop() {
         // check if preferences not equals null because this
@@ -225,6 +228,11 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * The one and only main method
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }

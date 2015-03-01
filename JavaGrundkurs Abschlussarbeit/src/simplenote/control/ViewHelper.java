@@ -1,3 +1,8 @@
+/**
+ * simpleNote, a better way to store your notes
+ * Abschlussarbeit der HFTM Grenchen
+ * Klasse Java Grundlagen II
+ */
 package simplenote.control;
 
 import java.io.File;
@@ -7,6 +12,11 @@ import java.util.Date;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * View helper which provides methods for often used elements
+ * 
+ * @author Claudio Marangon, Ljubisa Markovic
+ */
 public class ViewHelper {
     // Sortierungskonstanten
     public static final int ASC = 1;
@@ -22,7 +32,7 @@ public class ViewHelper {
      * @param date
      * @param prefix
      * @param text
-     * @return a formatted date
+     * @return formatted date as String
      */
     public static String formatDate(Date date, String prefix, String text) {
         if (date != null) {
@@ -41,7 +51,7 @@ public class ViewHelper {
      * 
      * @param date
      * @param prefix
-     * @return a formatted date
+     * @return formatted date as String
      */
     public static String formatDate(Date date, String prefix) {
         return formatDate(date, prefix, "");
@@ -51,7 +61,7 @@ public class ViewHelper {
      * Sets the content of a note to uneditable
      * 
      * @param content
-     * @return an uneditable string representation for webview
+     * @return uneditable string representation as String
      */
     public static String makeContentUnwritable(String content) {
         String contentWritable = "contenteditable=\"true\"";
@@ -68,7 +78,7 @@ public class ViewHelper {
      * Creates thumbnail ImageView from file
      * 
      * @param file
-     * @return an ImageView
+     * @return image as ImageView
      */
     public static ImageView createThumbnailImageView(File file) {
         ImageView iv = new ImageView();

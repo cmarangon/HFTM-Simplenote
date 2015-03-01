@@ -1,5 +1,7 @@
 /**
- * 
+ * simpleNote, a better way to store your notes
+ * Abschlussarbeit der HFTM Grenchen
+ * Klasse Java Grundlagen II
  */
 package simplenote.control;
 
@@ -16,8 +18,9 @@ import javafx.scene.web.HTMLEditor;
 import simplenote.model.Note;
 
 /**
+ * Controller class to add new notes to the vault
+ * 
  * @author Claudio Marangon, Ljubisa Markovic
- *
  */
 public class AddNoteController extends FXNoteController {
 
@@ -61,11 +64,14 @@ public class AddNoteController extends FXNoteController {
 
 
     /**
-     * 
+     * Constructor
      */
     public AddNoteController() {
     }
 
+    /**
+     * Gets called when loaded with FXMLLoader
+     */
     @FXML
     public void initialize() {
 
@@ -81,6 +87,9 @@ public class AddNoteController extends FXNoteController {
 
     /* FXML Actions */
 
+    /**
+     * Save the current note
+     */
     @FXML
     public void saveNote() {
         super.saveNote(newNote, true);
