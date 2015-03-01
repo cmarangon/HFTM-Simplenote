@@ -27,6 +27,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import simplenote.control.FXController;
 import simplenote.control.RootController;
 import simplenote.interfaces.InitCompletionHandler;
 import simplenote.model.Vault;
@@ -37,18 +38,12 @@ import simplenote.model.Vault;
  *
  */
 public class Main extends Application {
-    private final String APP_NAME = "simpleNote";
-    private final String CSS_FILE = "src/css/styles.css";
-    private final String LOCK_FILE = "black_flag"; // Arrrrr!
-    private final String LOADING_FILE = "src/img/armadillo_loading.png";
-    private final String ICON_FILE = "src/img/armadillo_icon_32.png";
-    private final String LAYOUT_FILE = "view/RootLayout.fxml";
-    
-    private final String WINDOW_HEIGHT = "window.height";
-    private final String WINDOW_WIDTH = "window.width";
-    private final String WINDOW_POSX = "window.posX";
-    private final String WINDOW_POSY = "window.posY";
-    
+    private static final String APP_NAME = "simpleNote";
+    private static final String CSS_FILE = "src/css/styles.css";
+    private static final String LOCK_FILE = "black_flag"; // Arrrrr!
+    private static final String LOADING_FILE = "src/img/armadillo_loading.png";
+    private static final String ICON_FILE = "src/img/armadillo_icon_32.png";
+    private static final String LAYOUT_FILE = "view/RootLayout.fxml";
 
     // Keeping the notes together and save
     private Vault vault;
@@ -201,10 +196,10 @@ public class Main extends Application {
             preferences = Preferences.userNodeForPackage(getClass());
 
             stage = new Stage();
-            stage.setX(preferences.getDouble(WINDOW_POSX, 0));
-            stage.setY(preferences.getDouble(WINDOW_POSY, 0));
-            stage.setWidth(preferences.getDouble(WINDOW_WIDTH, 800));
-            stage.setHeight(preferences.getDouble(WINDOW_HEIGHT, 600));
+            stage.setX(preferences.getDouble(FXController.PREF_WINDOW_POSX, 0));
+            stage.setY(preferences.getDouble(FXController.PREF_WINDOW_POSY, 0));
+            stage.setWidth(preferences.getDouble(FXController.PREF_WINDOW_WIDTH, 800));
+            stage.setHeight(preferences.getDouble(FXController.PREF_WINDOW_HEIGHT, 600));
             stage.setTitle(APP_NAME);
             stage.setScene(scene);
             // TODO: this image gets messed up :<
@@ -223,10 +218,10 @@ public class Main extends Application {
         // might be the case if you start this since instance app
         // more than one time
         if (preferences != null) {
-            preferences.putDouble(WINDOW_HEIGHT, stage.getHeight());
-            preferences.putDouble(WINDOW_WIDTH, stage.getWidth());
-            preferences.putDouble(WINDOW_POSX, stage.getX());
-            preferences.putDouble(WINDOW_POSY, stage.getY());
+            preferences.putDouble(FXController.PREF_WINDOW_HEIGHT, stage.getHeight());
+            preferences.putDouble(FXController.PREF_WINDOW_WIDTH, stage.getWidth());
+            preferences.putDouble(FXController.PREF_WINDOW_POSX, stage.getX());
+            preferences.putDouble(FXController.PREF_WINDOW_POSY, stage.getY());
         }
     }
 

@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Optional;
 
 import javafx.beans.value.ChangeListener;
@@ -117,10 +119,10 @@ public class NoteOverviewController extends FXController {
      * Using a lazy singleton implementation
      */
     public NoteOverviewController() {
-        this.rc = RootController.getInstance();
+        rc = RootController.getInstance();
 
-        for (Note note : this.rc.getVault().getNotes()) {
-            this.noteData.add(note);
+        for (Note note : rc.getVault().getNotes()) {
+            noteData.add(note);
         }
     }
 
@@ -128,22 +130,45 @@ public class NoteOverviewController extends FXController {
     public void initialize() {
         
         // fill listview with data
-        this.noteList.setItems(this.noteData);
+        noteList.setItems(noteData);
 
         // initialize the statustext
         updateStatus();
 
         // update buttons
         newNoteLabel.setTooltip(new Tooltip("Neue Notiz erstellen"));
+
         editButton.setGraphic(new ImageView(EDIT_ICON));
         editButton.setText("");
         editButton.setTooltip(new Tooltip("Notiz bearbeiten"));
+
         deleteButton.setGraphic(new ImageView(DELETE_ICON));
         deleteButton.setText("");
         deleteButton.setTooltip(new Tooltip("Notiz löschen"));
+
         sortTypeLabel.setTooltip(new Tooltip("Sortieren nach"));
         sortUpButton.setTooltip(new Tooltip("Aufsteigend"));
         sortDownButton.setTooltip(new Tooltip("Absteigend"));
+
+        // restore preferences
+        searchField.setText(rc.getPreferences().get(PREF_SEARCH_TEXT, ""));
+        RadioButton _sortDirection = null;
+        if (rc.getPreferences().getInt(PREF_SORT_DIR, ViewHelper.ASC) == ViewHelper.ASC) {
+            _sortDirection = sortUpButton;
+        } else {
+            _sortDirection = sortDownButton;
+        }
+        RadioMenuItem _sortType = null;
+        switch(rc.getPreferences().getInt(PREF_SORT_TYPE, ViewHelper.SORT_TITLE)) {
+            case ViewHelper.SORT_CREATION_DATE:
+                _sortType = sortOnCreationdate;
+                break;
+            case ViewHelper.SORT_MODIFICATION_DATE:
+                _sortType = sortOnModificationdate;
+                break;
+            default:
+                _sortType = sortOnTitle;
+        }
 
         // handle the functionality when another note gets selected
         noteList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -152,7 +177,7 @@ public class NoteOverviewController extends FXController {
             WebEngine we = textField.getEngine();
             
             // save selected item in persistent preferences
-            rc.getPreferences().putInt("notes.selectedNote", noteList.getSelectionModel().getSelectedIndex());
+            rc.getPreferences().putInt(PREF_SELECTED_NOTE, noteList.getSelectionModel().getSelectedIndex());
             
             // load values of selected item into view
             if (currentNote != null) {
@@ -161,7 +186,7 @@ public class NoteOverviewController extends FXController {
                 creationDateLabel.setText(ViewHelper.formatDate(currentNote.getCreationDate(), "Erstellt: "));
                 creationDateLabel.getStyleClass().removeAll(CSS_HIDDEN);
                 creationDateLabel.setMouseTransparent(false);
-                
+
                 modificationDateLabel.setText(ViewHelper.formatDate(currentNote.getModificationDate(), "Geändert: ", "nie"));
                 modificationDateLabel.getStyleClass().add(CSS_HIDDEN);
                 modificationDateLabel.setMouseTransparent(true);
@@ -215,7 +240,7 @@ public class NoteOverviewController extends FXController {
                 pictureList.setAlignment(Pos.TOP_RIGHT);
                 if (currentNote.getPictureList() != null) {
                     for (File file : currentNote.getPictureList()) {
-                        ImageView iv = ViewHelper.createImageView(file);
+                        ImageView iv = ViewHelper.createThumbnailImageView(file);
                         iv.getStyleClass().add(CSS_CLICKABLE);
                         iv.setOnMouseClicked(new EventHandler<MouseEvent>() {
                             @Override
@@ -245,10 +270,10 @@ public class NoteOverviewController extends FXController {
         });
 
         // handle search
-        FilteredList<Note> filteredData = new FilteredList<>(this.noteData, p -> true);
+        FilteredList<Note> filteredData = new FilteredList<>(noteData, p -> true);
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(note -> {
-                rc.getPreferences().put("search.text", newValue);
+                rc.getPreferences().put(PREF_SEARCH_TEXT, newValue);
 
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
@@ -277,68 +302,92 @@ public class NoteOverviewController extends FXController {
                 if (sortDirection.getSelectedToggle() != null && sortType.getSelectedToggle() != null) {
                     
                     if (sortDirection.getSelectedToggle().equals(sortDownButton)) {
-                        rc.getPreferences().putInt("sort.direction", ViewHelper.DESC);
+                        rc.getPreferences().putInt(PREF_SORT_DIR, ViewHelper.DESC);
                     } else {
-                        rc.getPreferences().putInt("sort.direction", ViewHelper.ASC);
+                        rc.getPreferences().putInt(PREF_SORT_DIR, ViewHelper.ASC);
                     }
                     
-                    Toggle selectedToggle = sortType.getSelectedToggle(); 
+                    Toggle selectedToggle = sortType.getSelectedToggle();
+                    int sortDir = rc.getPreferences().getInt(PREF_SORT_DIR, ViewHelper.ASC);
                     if (selectedToggle.equals(sortOnCreationdate)) {
+                        rc.getPreferences().putInt(PREF_SORT_TYPE, ViewHelper.SORT_CREATION_DATE);
                         sortTypeLabel.setText(sortOnCreationdate.getText());
-                        sortedData.setComparator((Note n1, Note n2) -> n1.getCreationDate().compareTo(n2.getCreationDate()) * rc.getPreferences().getInt("sort.direction", ViewHelper.ASC));
+                        sortedData.setComparator((Note n1, Note n2) -> n1.getCreationDate().compareTo(n2.getCreationDate()) * sortDir);
                     } else if (selectedToggle.equals(sortOnModificationdate)) {
+                        rc.getPreferences().putInt(PREF_SORT_TYPE, ViewHelper.SORT_MODIFICATION_DATE);
                         sortTypeLabel.setText(sortOnModificationdate.getText());
-                        sortedData.setComparator((Note n1, Note n2) -> n1.getModificationDate().compareTo(n2.getModificationDate()) * rc.getPreferences().getInt("sort.direction", ViewHelper.ASC));
+                        
+                        // since modification date can be null on unmodified notes we need to do a special check
+                        sortedData.setComparator(new Comparator<Note>() {
+                            @Override
+                            public int compare(Note n1, Note n2) {
+                                int res = 0;
+                                Date d1 = n1.getModificationDate();
+                                Date d2 = n2.getModificationDate();
+                                if (d1 != null && d2 == null) {
+                                    res = 1;
+                                } else if (d1 == null && d2 != null) {
+                                    res = -1;
+                                } else if (d1 == null && d2 == null) {
+                                    res = 0;
+                                } else {
+                                    res = d1.compareTo(d2);
+                                }
+                                return res * sortDir;
+                            }
+                        });
                     } else {
+                        rc.getPreferences().putInt(PREF_SORT_TYPE, ViewHelper.SORT_TITLE);
                         sortTypeLabel.setText(sortOnTitle.getText());
-                        sortedData.setComparator((Note n1, Note n2) -> n1.getTitle().toLowerCase().compareTo(n2.getTitle().toLowerCase()) * rc.getPreferences().getInt("sort.direction", ViewHelper.ASC));
+                        sortedData.setComparator((Note n1, Note n2) -> n1.getTitle().toLowerCase().compareTo(n2.getTitle().toLowerCase()) * sortDir);
                     }
                 }
             }
         };
+
         sortDirection.selectedToggleProperty().addListener(sortToggleListener);
         sortType.selectedToggleProperty().addListener(sortToggleListener);
 
         // load sorted and filtered data into list
         noteList.setItems(sortedData);
-
-        // save preferences
-        this.searchField.setText(this.rc.getPreferences().get("search.text", ""));
-        if (this.rc.getPreferences().getInt("sort.direction", 1) == ViewHelper.ASC) {
-            this.sortUpButton.setSelected(true);
-        } else {
-            this.sortDownButton.setSelected(true);
+        if (rc.getSelectedNote() == null) {
+            int index = rc.getPreferences().getInt(PREF_SELECTED_NOTE, 0);
+            noteList.getSelectionModel().select(index);
+            Note initialNote = noteList.getSelectionModel().getSelectedItem();
+            rc.setSelectedNote(initialNote);
         }
-        noteList.getSelectionModel().select(this.rc.getPreferences().getInt("notes.selectedNote", 0));
+        noteList.getSelectionModel().select(rc.getSelectedNote());
+        sortDirection.selectToggle(_sortDirection);
+        sortType.selectToggle(_sortType);
     }
 
     @FXML
     public void showAddNote() {
-        this.rc.showAddNote();
+        rc.showAddNote();
     }
 
     @FXML
     public void showEditNote() {
-        this.rc.showEditNote(this.noteList.getSelectionModel().getSelectedItem());
+        rc.showEditNote(noteList.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     public void deleteNote() {
         // check if something is selected and selected note is in data
-        if (this.currentNote != null && this.noteData.contains(this.currentNote)) {
+        if (currentNote != null && noteData.contains(currentNote)) {
             
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Löschen bestätigen");
             alert.setHeaderText("Sie sind dabei eine Notiz zu löschen");
-            alert.setContentText("Wollen Sie '" + this.currentNote.getTitle() + "' wirklich löschen?");
+            alert.setContentText("Wollen Sie '" + currentNote.getTitle() + "' wirklich löschen?");
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK){
                 // remove from storage
-                this.rc.getVault().delete(this.currentNote);
+                rc.getVault().delete(currentNote);
 
                 // remove from list
-                this.noteData.remove(this.currentNote);
+                noteData.remove(currentNote);
                 
                 // update status
                 updateStatus();
@@ -347,6 +396,6 @@ public class NoteOverviewController extends FXController {
     }
     
     private void updateStatus() {
-        this.statusLabel.setText("Status: " + this.noteList.getItems().size() + " / " + this.noteData.size());
+        statusLabel.setText("Status: " + noteList.getItems().size() + " / " + noteData.size());
     }
 }

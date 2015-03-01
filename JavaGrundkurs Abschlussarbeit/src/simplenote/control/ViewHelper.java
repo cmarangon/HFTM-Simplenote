@@ -9,12 +9,12 @@ import javafx.scene.image.ImageView;
 
 public class ViewHelper {
     // Sortierungskonstanten
-    public static int ASC = 1;
-    public static int DESC = -1;
+    public static final int ASC = 1;
+    public static final int DESC = -1;
 
-    public static int SORT_TITLE = 1;
-    public static int SORT_CREATION_DATE = 2;
-    public static int SORT_MODIFICATION_DATE = 3;
+    public static final int SORT_TITLE = 1;
+    public static final int SORT_CREATION_DATE = 2;
+    public static final int SORT_MODIFICATION_DATE = 3;
 
     /**
      * Formats the given date into an predefined string
@@ -65,12 +65,12 @@ public class ViewHelper {
     }
 
     /**
-     * Creates standard ImageView from file
+     * Creates thumbnail ImageView from file
      * 
      * @param file
      * @return an ImageView
      */
-    public static ImageView createImageView(File file) {
+    public static ImageView createThumbnailImageView(File file) {
         ImageView iv = new ImageView();
         iv.setImage(new Image(file.toURI().toString()));
         iv.setFitHeight(200);

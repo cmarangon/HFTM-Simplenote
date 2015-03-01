@@ -7,32 +7,33 @@
 
 <AnchorPane prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <Label fx:id="modificationDateLabel" styleClass="discreet" layoutX="616.0" layoutY="28.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="28.0" />
       <TextField fx:id="titleField" layoutX="10.0" layoutY="15.0" promptText="Titel" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0" />
       <HTMLEditor fx:id="textField" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;false&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="10.0" layoutY="50.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="50.0" />
-      <Button fx:id="addLink" layoutX="934.0" layoutY="426.0" text="+ Link" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="770.0" layoutY="50.0" text="Bilder" textAlignment="CENTER" AnchorPane.rightAnchor="194.0" AnchorPane.topAnchor="50.0" />
       <ScrollPane fitToHeight="true" hbarPolicy="NEVER" layoutX="770.0" layoutY="50.0" minHeight="200.0" prefWidth="220.0" AnchorPane.bottomAnchor="170.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0">
          <content>
             <VBox fx:id="pictureList" fillWidth="false" prefWidth="200.0" styleClass="imageList" />
          </content>
       </ScrollPane>
+      <Label layoutX="772.0" layoutY="338.0" text="Links" AnchorPane.bottomAnchor="145.0" AnchorPane.rightAnchor="197.0" />
       <ScrollPane fitToHeight="true" hbarPolicy="NEVER" layoutX="790.0" layoutY="340.0" prefWidth="220.0" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="10.0">
          <content>
             <ListView fx:id="linkList" prefHeight="100.0" prefWidth="218.0" />
          </content>
       </ScrollPane>
       <TextField fx:id="linkField" layoutX="770.0" layoutY="426.0" prefWidth="140.0" text="http://" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="90.0" />
-      <Label layoutX="770.0" layoutY="50.0" text="Bilder" textAlignment="CENTER" AnchorPane.rightAnchor="194.0" AnchorPane.topAnchor="50.0" />
-      <Label layoutX="772.0" layoutY="338.0" text="Links" AnchorPane.bottomAnchor="145.0" AnchorPane.rightAnchor="197.0" />
-      <HBox layoutX="803.0" layoutY="-9.0" spacing="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <Button fx:id="addLinkButton" layoutX="934.0" layoutY="426.0" text="+ Link" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+      <HBox fx:id="modifyLinkList" layoutX="834.0" layoutY="490.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
          <children>
-            <Button fx:id="backButton" mnemonicParsing="false" onAction="#showOverview" text="Abbrechen" />
-            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveNote" text="Speichern" />
+            <Button fx:id="acceptButton" text="ok" />
+            <Button fx:id="cancelButton" text="nok" />
          </children>
       </HBox>
-      <HBox fx:id="modifyLink" layoutX="834.0" layoutY="490.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+      <HBox layoutX="803.0" layoutY="-9.0" spacing="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
-            <Button fx:id="accept" text="ok" />
-            <Button fx:id="cancel" text="nok" />
+            <Button fx:id="backButton" mnemonicParsing="false" text="Abbrechen" />
+            <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveNote" text="Speichern" />
          </children>
       </HBox>
    </children>
