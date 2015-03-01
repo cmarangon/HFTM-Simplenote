@@ -179,7 +179,9 @@ public class NoteOverviewController extends FXController {
         // handle the functionality when another note gets selected
         noteList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 
-            currentNote = newValue;
+            rc.setSelectedNote(newValue);
+            currentNote = rc.getSelectedNote();
+
             WebEngine we = textField.getEngine();
             
             // save selected item in persistent preferences
@@ -197,45 +199,36 @@ public class NoteOverviewController extends FXController {
                 modificationDateLabel.getStyleClass().add(CSS_HIDDEN);
                 modificationDateLabel.setMouseTransparent(true);
 
-                creationDateLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        creationDateLabel.getStyleClass().add(CSS_HIDDEN);
-                        creationDateLabel.setMouseTransparent(true);
-                        
-                        modificationDateLabel.getStyleClass().removeAll(CSS_HIDDEN);
-                        modificationDateLabel.setMouseTransparent(false);
-                    }
+                creationDateLabel.setOnMouseClicked((event) -> {
+                    creationDateLabel.getStyleClass().add(CSS_HIDDEN);
+                    creationDateLabel.setMouseTransparent(true);
+                    
+                    modificationDateLabel.getStyleClass().removeAll(CSS_HIDDEN);
+                    modificationDateLabel.setMouseTransparent(false);
                 });
 
-                modificationDateLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        modificationDateLabel.getStyleClass().add(CSS_HIDDEN);
-                        modificationDateLabel.setMouseTransparent(true);
-                        
-                        creationDateLabel.getStyleClass().removeAll(CSS_HIDDEN);
-                        creationDateLabel.setMouseTransparent(false);
-                    }
+                modificationDateLabel.setOnMouseClicked((event) -> {
+                    modificationDateLabel.getStyleClass().add(CSS_HIDDEN);
+                    modificationDateLabel.setMouseTransparent(true);
+                    
+                    creationDateLabel.getStyleClass().removeAll(CSS_HIDDEN);
+                    creationDateLabel.setMouseTransparent(false);
                 });
 
                 // clear and rebuild link list
                 linkData.clear();
                 if (currentNote.getLinkList() != null) {
                     linkData.addAll(currentNote.getLinkList());
-                    linkList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            URL url = linkList.getSelectionModel().getSelectedItem();
-                            
-                            // Just open it
-                            try {
-                                Desktop.getDesktop().browse(url.toURI());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
+                    linkList.setOnMouseClicked((event) -> {
+                        URL url = linkList.getSelectionModel().getSelectedItem();
+                        
+                        // Just open it
+                        try {
+                            Desktop.getDesktop().browse(url.toURI());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
                         }
                     });
                 }
@@ -248,16 +241,13 @@ public class NoteOverviewController extends FXController {
                     for (File file : currentNote.getPictureList()) {
                         ImageView iv = ViewHelper.createThumbnailImageView(file);
                         iv.getStyleClass().add(CSS_CLICKABLE);
-                        iv.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                            @Override
-                            public void handle(MouseEvent mouseEvent) {
-                                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-                                    Desktop desktop = Desktop.getDesktop();
-                                    try {
-                                        desktop.open(file);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                        iv.setOnMouseClicked((event) -> {
+                            if(event.getButton().equals(MouseButton.PRIMARY)){
+                                Desktop desktop = Desktop.getDesktop();
+                                try {
+                                    desktop.open(file);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
                             }
                         });

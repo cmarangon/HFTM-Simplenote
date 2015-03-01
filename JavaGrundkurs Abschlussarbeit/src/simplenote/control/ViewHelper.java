@@ -87,6 +87,7 @@ public class ViewHelper {
         iv.setFitWidth(200);
         iv.setPreserveRatio(true);
         iv.setSmooth(true);
+        iv.setPickOnBounds(true);
         return iv;
     }
 }
